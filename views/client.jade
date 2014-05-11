@@ -1,0 +1,25 @@
+doctype html
+html
+	head
+		title Chat app
+		link(rel="stylesheet", type="text/css", href="css/style.css")
+	body
+		div.login-form
+			span name
+			br/
+			input.username(type="text")
+			br/
+			input.sex(type="radio", name="sex", value="male")
+			span male
+			input.sex(type="radio", name="sex", value="female")
+			span female
+			br/
+			button.login login
+		div.container
+			h2 Chat app
+			div.messages
+			input.message(type="text")
+			input.send(type="button", value="send")
+
+		script(type="text/javascript", src="js/zepto.min.js")
+		script(type="text/javascript", src="js/script.js")

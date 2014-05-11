@@ -1,0 +1,12 @@
+{
+	"name": "little_chatty",
+	"description": "Back-end app for FE academy.",
+	"author": "st",
+	"version": "0.0.1",
+	"dependencies": {
+		"express": "latest",
+		"socket.io": "latest",
+		"jade": "latest",
+		"body-parser": "latest"
+	}
+}

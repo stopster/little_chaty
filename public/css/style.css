@@ -1,0 +1,25 @@
+div{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.container{
+	width: 450px;
+	margin: 20px auto;
+	padding: 18px 24px;
+	background: #efeffe;
+	border: 1px solid #ccc;
+}
+.messages{
+	width: 100%;
+	height: 450px;
+	overflow: hidden;
+	overflow-y: auto;
+	background: #fefefe;
+	border: 2px solid #ccc;
+}
+.message{
+	padding: 4px 6px;
+	border: 1px solid #aaa;
+	font-size: 14px;
+}
