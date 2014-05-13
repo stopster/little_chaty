@@ -1,19 +1,57 @@
 (function($, w, d){
 	// Some contstants
 	var apiUrl = "http://localhost:5000/api",
-		s,
-		user
+		user,
+		$messages = $(".messages"),
+		$statusMessage = $("<div>").addClass("status"),
+		$message = $("<div>").addClass("message"),
+		socket,
+		chatEntered = false
 	;
 
-	function startChat(user){
-		s = io.connect("http://localhost:5000");
-		// s.on("connect", function(){
+	function startChat(){
+		socket = io.connect("http://localhost:5000");
 
-		// });
-		s.on("message", function(data){
-			$(".messages").append("<div><b>" + data.user + "</b> wrote: " + data.message + "</div>");
+		socket.on("connect", function(){
+			socket.emit("enterChat", user);
 		});
+
+		socket.on("chatEntered", function(){
+			chatEntered = true;
+		});
+
+		socket.on("userOnline", 
+			function(user){
+				userStatusChanged(user, "online")
+			}
+		);
+
+		socket.on("userOffline",
+			function(user){
+				userStatusChanged(user, "offline");
+			}
+		);
+
+		socket.on("disconnect", function(){
+			chatEntered = false;
+		});
+
+		socket.on("message", newMessage);
 	}
+
+	function userStatusChanged(user, status){
+		var $m = $statusMessage.clone();
+		$m.html("<b>" + user.name + "</b> is " + status);
+		$messages.append($m);
+	}
+
+	function newMessage(data){
+		$message
+			.clone()
+			.html("<i>" + data.user.name + "</i>: " + data.message)
+			.appendTo($messages);
+	}
+
 	$(".login").bind("click", function(event){
 		var name = $(".username").val();
 		var sex = $(".sex:checked").length>0? $(".sex:checked").val(): null;
@@ -37,8 +75,8 @@
 	});
 
 	$(".send").bind("click", function(e){
-		if(s && $(".message").text().length>0){
-			s.emit("postmessage", {user:user.name, message: $(".message").text()});
+		if(socket && $(".message-text").val()){
+			socket.emit("postMessage", {user:user.name, message: $(".message-text").val()});
 		} else {
 			$(".username").focus();
 		}

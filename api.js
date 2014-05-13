@@ -1,5 +1,6 @@
-var user = require("./user.js");
+var User = require("./user.js").User;
 var jstrfy = JSON.stringify;
+
 exports.Api = function(app){
 	var pre = "/api";
 	// Get user info
@@ -15,7 +16,7 @@ exports.Api = function(app){
 
 	// Check if user is online. Return true or false
 	app.get(pre + "/users/:userName/isLoggedIn", function(req, res){
-		res.send(user.isLoggedIn(req.params.userName));
+		res.send(User.isLoggedIn(req.params.userName));
 	});
 
 	// Login user
@@ -29,11 +30,11 @@ exports.Api = function(app){
 				sex: req.body.sex? req.body.sex: null
 			};
 
-			if(user.isLoggedIn(newUser)){
+			if(User.isLoggedIn(newUser)){
 				res.statusCode = 409;
 				res.send(jstrfy({message: "User already logged in. Choose another name."}));
 			} else {
-				user.login(newUser);
+				User.login(newUser);
 				res.send(jstrfy(newUser));
 			}
 		} else {

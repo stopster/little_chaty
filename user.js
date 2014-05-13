@@ -1,37 +1,37 @@
 var usersLoggedIn = {};
-var usersInChat = [];
-exports.isLoggedIn = function(user){
-	if(typeof user === "string"){
-		user = {name: user};
+var ee = require("events").EventEmitter;
+
+function User(){
+	ee.call(this);
+}	
+User.prototype = ee.prototype;
+User.prototype.isLoggedIn = function(user){
+	if(typeof user === "object" && user.name){
+		user = user.name;
 	}
-	if(usersLoggedIn[user.name]){
+	if(usersLoggedIn[user]){
 		return true;
 	} else {
 		return false;
 	}
 };
-
-exports.addToChat = function(user){
-	usersInChat.push(user);
-};
-
-exports.removeFromChat = function(user){
-	usersInChat.splice(usersInChat.indexOf(user), 1);
-};
-
-exports.login = function(user){
+User.prototype.login = function(user){
 	if(!user.name || usersLoggedIn[user.name]){
 		return false;
 	}
 	usersLoggedIn[user.name] = user;
+	this.emit("login", user);
 	return true;
 };
 
-exports.logout = function(userName){
+User.prototype.logout = function(userName, silent){
+	if(!silent){
+		this.emit("logout", usersLoggedIn[userName]);
+	}
 	delete usersLoggedIn[userName];
 };
 
-exports.get = function(userName, asArray){
+User.prototype.get = function(userName, asArray){
 	var output;
 	if(!userName){
 		if(asArray){
@@ -50,3 +50,5 @@ exports.get = function(userName, asArray){
 	}
 	return output;
 };
+
+exports.User = new User();
