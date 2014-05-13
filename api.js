@@ -41,5 +41,4 @@ exports.Api = function(app){
 			res.send(jstrfy({message:"Username is missing."}));
 		}
 	});
-
 };

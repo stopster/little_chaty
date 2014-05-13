@@ -1,25 +1,34 @@
-var users = {};
+var usersLoggedIn = {};
+var usersInChat = [];
 exports.isLoggedIn = function(user){
 	if(typeof user === "string"){
 		user = {name: user};
 	}
-	if(users[user.name]){
+	if(usersLoggedIn[user.name]){
 		return true;
 	} else {
 		return false;
 	}
 };
 
+exports.addToChat = function(user){
+	usersInChat.push(user);
+};
+
+exports.removeFromChat = function(user){
+	usersInChat.splice(usersInChat.indexOf(user), 1);
+};
+
 exports.login = function(user){
-	if(!user.name || users[user.name]){
+	if(!user.name || usersLoggedIn[user.name]){
 		return false;
 	}
-	users[user.name] = user;
+	usersLoggedIn[user.name] = user;
 	return true;
 };
 
 exports.logout = function(userName){
-	delete users[userName];
+	delete usersLoggedIn[userName];
 };
 
 exports.get = function(userName, asArray){
@@ -27,17 +36,17 @@ exports.get = function(userName, asArray){
 	if(!userName){
 		if(asArray){
 			var arrUsers = [];
-			for(var name in users){
-				if(users.hasOwnProperty(name)){
-					arrUsers.push(users[name]);
+			for(var name in usersLoggedIn){
+				if(usersLoggedIn.hasOwnProperty(name)){
+					arrUsers.push(usersLoggedIn[name]);
 				}
 			}
 			output = arrUsers;
 		} else {
-			output = users;
+			output = usersLoggedIn;
 		}
 	} else {
-		output = users[userName];
+		output = usersLoggedIn[userName];
 	}
 	return output;
 };

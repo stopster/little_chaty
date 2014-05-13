@@ -1,14 +1,18 @@
 (function($, w, d){
 	// Some contstants
-	var apiUrl = "http://localhost:5000/api"
+	var apiUrl = "http://localhost:5000/api",
+		s,
+		user
 	;
 
 	function startChat(user){
-		var s = new WebSocket("ws://localhost:5000/chat", "protocol1");
-		s.onopen = function(){
-			console.log("on open", arguments);
-		};
-		// s.send(JSON.stringify({message:"hello!"}));
+		s = io.connect("http://localhost:5000");
+		// s.on("connect", function(){
+
+		// });
+		s.on("message", function(data){
+			$(".messages").append("<div><b>" + data.user + "</b> wrote: " + data.message + "</div>");
+		});
 	}
 	$(".login").bind("click", function(event){
 		var name = $(".username").val();
@@ -22,14 +26,21 @@
 				processData: false,
 				contentType: "application/json",
 				success: function(data){
-					setTimeout(function(){
-						startChat(data);
-					}, 1000);
+					user = data;
+					startChat();
 				},
 				error: function(){
 					console.log("error", arguments);
 				}
 			});
+		}
+	});
+
+	$(".send").bind("click", function(e){
+		if(s && $(".message").text().length>0){
+			s.emit("postmessage", {user:user.name, message: $(".message").text()});
+		} else {
+			$(".username").focus();
 		}
 	});
 })(Zepto, window, document);
