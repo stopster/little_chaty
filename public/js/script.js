@@ -1,6 +1,6 @@
 (function($, w, d){
 	// Some contstants
-	var apiUrl = "http://chaty.st.lviv.ua/api",
+	var apiUrl = "http://198.211.123.35:5000/api",
 		user,
 		$messages = $(".messages"),
 		$statusMessage = $("<div>").addClass("status"),
@@ -10,7 +10,7 @@
 	;
 
 	function startChat(){
-		socket = io.connect("http://chaty.st.lviv.ua");
+		socket = io.connect("http://198.211.123.35:5000");
 
 		socket.on("connect", function(){
 			socket.emit("enterChat", user);
