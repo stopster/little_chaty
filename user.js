@@ -3,7 +3,8 @@ var ee = require("events").EventEmitter;
 
 function User(){
 	ee.call(this);
-}	
+}
+
 User.prototype = ee.prototype;
 User.prototype.isLoggedIn = function(user){
 	if(typeof user === "object" && user.name){

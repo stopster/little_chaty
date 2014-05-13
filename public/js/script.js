@@ -1,6 +1,6 @@
 (function($, w, d){
 	// Some contstants
-	var apiUrl = "http://localhost:5000/api",
+	var apiUrl = "http://chaty.st.lviv.ua/api",
 		user,
 		$messages = $(".messages"),
 		$statusMessage = $("<div>").addClass("status"),
@@ -10,7 +10,7 @@
 	;
 
 	function startChat(){
-		socket = io.connect("http://localhost:5000");
+		socket = io.connect("http://chaty.st.lviv.ua");
 
 		socket.on("connect", function(){
 			socket.emit("enterChat", user);
@@ -20,9 +20,9 @@
 			chatEntered = true;
 		});
 
-		socket.on("userOnline", 
+		socket.on("userOnline",
 			function(user){
-				userStatusChanged(user, "online")
+				userStatusChanged(user, "online");
 			}
 		);
 
