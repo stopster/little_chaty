@@ -1,5 +1,4 @@
 var User = require("./user.js").User;
-var _ = require("underscore");
 
 exports.Chat = function(http){
 	var io = require("socket.io").listen(http);
