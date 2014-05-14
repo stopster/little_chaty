@@ -55,7 +55,7 @@ exports.Api = function(app){
 			res.send(jstrfy({message: "Please, provide user id received during login."}));
 		}
 		if(success){
-			res.send(jstrfy(true));
+			res.send(jstrfy({success: true}));
 		} else {
 			res.statusCode = 500;
 			res.send(jstrfy({message: "Could not logout user. Check user id, that you send and try again."}));
