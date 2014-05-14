@@ -1,6 +1,7 @@
 (function($, w, d){
 	// Some contstants
-	var apiUrl = "http://localhost:5000/api",
+	var apiUrl = window.location + "api",
+		chatUrl = window.location,
 		user,
 		$messages = $(".messages"),
 		$statusMessage = $("<div>").addClass("status"),
@@ -10,7 +11,7 @@
 	;
 
 	function startChat(){
-		socket = io.connect("http://localhost:5000/", {"force new connection": true});
+		socket = io.connect(chatUrl, {"force new connection": true});
 
 		socket.on("connect", function(){
 			socket.emit("enterChat", user);
