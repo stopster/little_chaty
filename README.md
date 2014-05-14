@@ -46,7 +46,8 @@ All objects should be send and will be received in JSON.
 
     {
         user: "someUserName",
-        message: "Some message text"
+        message: "Some message text",
+        [isYourMessage: true] - if you posted this message
     }
 
 ### successObject
