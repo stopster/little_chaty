@@ -10,12 +10,14 @@ For chat functionality with websockets, use **`198.211.123.35:5000`** address.
 
 General flow of using API:
 
-0. (Optional) Checking, if choosen name is available.
-1. Loging user (with name, sex, etc.)
-2. Open WebSocket for chat
-3. Send initial message (enter chat)
-4. Send messages to the chat
-5. Close socket and/or logout user.
+0. (Optional) Checking, if choosen name is available. [API]
+1. Loging user (with name, sex, etc.)                 [API]
+2. Open WebSocket for chat                            [WS]
+3. Send initial message ([`enterChat`](#server-event-enterChat)) [WS]
+4. Send and receive chat messages and user statuses   [WS]
+5. Close socket and/or logout user.                   [API/WS]
+
+*API - use via XMLHttpRequest, WS - WebSocket  
 
 ## API objects
 All objects should be send and will be received in JSON.
@@ -88,7 +90,7 @@ So, it's recommended to use it on client side, unless you are using native WebSo
 ### [client event] enterChat
 Join your socket to chat room.  
 **Input**: `userObject`.  
-Also, it triggers server event [`chatEntered`](#chatentered) event for you, and `userOnline` for all users online.  Example:
+Also, it triggers server event [`chatEntered`](#server-event-chatentered) event for you, and `userOnline` for all users online.  Example:
     
     var socket = io.connect(chatUrl);
 
