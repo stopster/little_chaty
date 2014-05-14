@@ -65,28 +65,28 @@ All objects should be send and will be received in JSON.
 ##API methods
 ### [GET] /user/isLoggedIn/:userName
 Check, if user is online.  
-**Output** JSON: `successObject`.  
+**Output**: `successObject`.  
 
 ### [GET] /user/[:userName]
 Get particular user object, if userName provided or array of users, which is online.  
-**Output** JSON: `userObject/[userObject]`.  
+**Output**: `userObject/[userObject]`.  
 
 ### [POST] /user/login
 Login user.  
-**Input** JSON: `userObject`.  
-**Output** JSON: `secureUserObject`.  
+**Input**: `userObject`.  
+**Output**: `secureUserObject`.  
 
 ### [POST] /user/logout
 Logout user.  
-**Input** JSON: `userIDObject` or `secureUserObject`.   
-**Output** JSON: `successObject`.  
+**Input**: `userIDObject` or `secureUserObject`.   
+**Output**: `successObject`.  
 
 ## Chat 
 Chat functionality implemented with [socket.io](http://socket.io/).
 So, it's recommended to use it on client side, unless you are using native WebSocket API or another lib. In this case, you have to mimic socket.io [protocol](https://github.com/LearnBoost/socket.io-spec).
 ### [client event] enterChat
 Join your socket to chat room.  
-**Input** JSON: `userObject`.  
+**Input**: `userObject`.  
 Also, it triggers server event [`chatEntered`](#chatentered) event for you, and `userOnline` for all users online.  Example:
     
     var socket = io.connect(chatUrl);
