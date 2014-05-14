@@ -13,7 +13,7 @@ General flow of using API:
 0. (Optional) Checking, if choosen name is available. [API]
 1. Loging user (with name, sex, etc.)                 [API]
 2. Open WebSocket for chat                            [WS]
-3. Send initial message ([`enterChat`](#server-event-enterChat)) [WS]
+3. Send initial message ([`enterChat`](#client-event-enterchat)) [WS]
 4. Send and receive chat messages and user statuses   [WS]
 5. Close socket and/or logout user.                   [API/WS]
 
