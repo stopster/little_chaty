@@ -30,7 +30,7 @@ exports.Chat = function(http){
 		delete namedSocks[socket.id];
 		socks.splice(socks.indexOf(socket), 1);
 		socks.forEach(function(s, index){
-			s.emit("userOffline", user);
+			s.emit("userOffline", User.safe(user));
 		});
 	}
 	//Allows using native WebSockets or other libs, that follows the socket.io protocol
@@ -40,7 +40,7 @@ exports.Chat = function(http){
 		socket.on("enterChat", function(user){
 			if(user && User.isLoggedIn(user)){
 				socks.forEach(function(s, index){
-					s.emit("userOnline", user);
+					s.emit("userOnline", User.safe(user));
 				});
 				namedSocks[socket.id] = user.name;
 				socks.push(socket);
@@ -56,11 +56,17 @@ exports.Chat = function(http){
 			if(!User.isLoggedIn(userName)){
 				socket.emit("error", {message: "Please, login first."});
 			} else {
+				var output = {
+					user: User.safe(User.get(userName)),
+					message: data.message
+				};
 				socks.forEach(function(s, index){
-					s.emit("message", {
-						user: User.get(userName),
-						message: data.message
-					});
+					if(s.id == socket.id){
+						output.isYourMessage = true;
+					} else {
+						delete output.isYourMessage;
+					}
+					s.emit("message", output);
 				});
 			}
 		});

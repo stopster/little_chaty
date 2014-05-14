@@ -1,5 +1,6 @@
 var User = require("./user.js").User;
 var jstrfy = JSON.stringify;
+var crypto = require("crypto");
 
 exports.Api = function(app){
 	var pre = "/api";
@@ -21,13 +22,14 @@ exports.Api = function(app){
 
 	// Login user
 	// Username need to be provided
-	app.post(pre + "/users", function(req, res){
+	app.post(pre + "/users/login", function(req, res){
 		res.set("Access-Control-Allow-Origin", "*");
 		res.set("Content-type", "application/json");
 		if(req.body && req.body.name){
 			var newUser = {
 				name: req.body.name,
-				sex: req.body.sex? req.body.sex: null
+				sex: req.body.sex? req.body.sex: null,
+				id: crypto.createHash("sha1").update("" + Math.random()*10000).digest("hex")
 			};
 
 			if(User.isLoggedIn(newUser)){
@@ -40,6 +42,23 @@ exports.Api = function(app){
 		} else {
 			res.statusCode = 400;
 			res.send(jstrfy({message:"Username is missing."}));
+		}
+	});
+
+	app.post(pre + "/users/logout", function(req, res){
+		res.set("Access-Control-Allow-Origin", "*");
+		res.set("Content-type", "application/json");
+		if(req.body && req.body.id){
+			var success = User.logout({id: req.body.id});	
+		} else {
+			res.statusCode = 404;
+			res.send(jstrfy({message: "Please, provide user id received during login."}));
+		}
+		if(success){
+			res.send(jstrfy(true));
+		} else {
+			res.statusCode = 500;
+			res.send(jstrfy({message: "Could not logout user. Check user id, that you send and try again."}));
 		}
 	});
 };

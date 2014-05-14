@@ -25,11 +25,32 @@ User.prototype.login = function(user){
 	return true;
 };
 
-User.prototype.logout = function(userName, silent){
-	if(!silent){
-		this.emit("logout", usersLoggedIn[userName]);
+User.prototype.logout = function(deleteBy, silent){
+	var loggedOutName;
+	// Find user by ID
+	if(deleteBy.id){
+		for(var name in usersLoggedIn){
+			if(usersLoggedIn.hasOwnProperty(name)){
+				if(usersLoggedIn[name].id == deleteBy.id){
+					loggedOutName = name;
+					break;
+				}
+			}
+		}
+		// else, check user name
+	} else if(deleteBy.name && usersLoggedIn[deleteBy.name]){
+		loggedOutName = deleteBy.name;
 	}
-	delete usersLoggedIn[userName];
+
+	if(loggedOutName){
+		if(!silent){
+			this.emit("logout", usersLoggedIn[loggedOutName]);
+		}
+		delete usersLoggedIn[loggedOutName];
+		return true;
+	} else {
+		return false;
+	}
 };
 
 User.prototype.get = function(userName, asArray){
@@ -51,5 +72,13 @@ User.prototype.get = function(userName, asArray){
 	}
 	return output;
 };
+
+// Copy user object without id and other secure information
+User.prototype.safe = function(user){
+	var safeUser = {};
+	safeUser.name = user.name;
+	safeUser.sex = user.sex;
+	return safeUser;
+}
 
 exports.User = new User();

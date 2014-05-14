@@ -1,6 +1,6 @@
 (function($, w, d){
 	// Some contstants
-	var apiUrl = "http://198.211.123.35:5000/api",
+	var apiUrl = "http://localhost:5000/api",
 		user,
 		$messages = $(".messages"),
 		$statusMessage = $("<div>").addClass("status"),
@@ -10,7 +10,7 @@
 	;
 
 	function startChat(){
-		socket = io.connect("http://198.211.123.35:5000");
+		socket = io.connect("http://localhost:5000/", {"force new connection": true});
 
 		socket.on("connect", function(){
 			socket.emit("enterChat", user);
@@ -39,6 +39,11 @@
 		socket.on("message", newMessage);
 	}
 
+	function stopChat(){
+		chatEntered = false;
+		socket.disconnect();
+	}
+
 	function userStatusChanged(user, status){
 		var $m = $statusMessage.clone();
 		$m.html("<b>" + user.name + "</b> is " + status);
@@ -55,23 +60,41 @@
 	$(".login").bind("click", function(event){
 		var name = $(".username").val();
 		var sex = $(".sex:checked").length>0? $(".sex:checked").val(): null;
-
 		if(name && name.length > 0){
 			$.ajax({
 				type: "post",
-				url: apiUrl + "/users",
+				url: apiUrl + "/users/login",
 				data: JSON.stringify({"name": name, "sex": sex}),
 				processData: false,
 				contentType: "application/json",
 				success: function(data){
 					user = data;
 					startChat();
+					$(".username").css("border", "1px solid green");	
 				},
 				error: function(){
 					console.log("error", arguments);
 				}
 			});
 		}
+	});
+
+	$(".logout").bind("click", function(event){
+		$.ajax({
+			type: "post",
+			url: apiUrl + "/users/logout",
+			data: JSON.stringify({id: user.id}),
+			processData: false,
+			contentType: "application/json",
+			success: function(data){
+				console.log("logged out", data);
+				$(".username").css("border", "1px solid grey");	
+				stopChat();
+			},
+			error: function(data){
+				console.log("error logged out", data);
+			}
+		});
 	});
 
 	$(".send").bind("click", function(e){
