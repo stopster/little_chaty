@@ -9,7 +9,7 @@ var chatPort = 6000;
 app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));
 
-app.set("enableClient", true);
+app.set("enableClient", false);
 
 var client = require("./client.js").Client(app);
 var api = require("./api.js").Api(app);
