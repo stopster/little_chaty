@@ -9,6 +9,7 @@ API available on 198.211.123.35:5000/api.
 For chat functionality with websockets, use 198.211.123.35:5000 address.
 
 General flow of using API:
+
 0. (Optional) Checking, if choosen name is available.
 1. Loging user (with name, sex, etc.)
 2. Open WebSocket for chat
@@ -29,17 +30,35 @@ All objects are in JSON.
 ### secureUserObject
 
     {
-        id: "23fasdbas323rfsadf32fawe32f2"
+        id: "23fasdbas323rfsadf32fawe32f2" (hash)
         name: "someName"
         sex: ["male"/"female"]
         image: STILL IN PROGRESS! (sorry for that :))
     }
 
-API methods description:
-### [GET] /user/isLoggedIn/:userName
-Check, if username is available.
+### userIDObject
 
-**Output** JSON: `true/false`.
+    {
+        id: "23fasdbas323rfsadf32fawe32f2" (hash)
+    }
+
+### successObject
+
+    {
+        success: true/false
+    }
+
+### errorObject
+
+    {
+        message: "Some error message. Also HTTP status code will be available."
+    }
+
+##API methods
+### [GET] /user/isLoggedIn/:userName
+Check, if user is online.
+
+**Output** JSON: `successObject`.
 
 ### [GET] /user/[:userName]
 Get particular user object, if userName provided or array of users, which is online.
@@ -50,15 +69,18 @@ Get particular user object, if userName provided or array of users, which is onl
 Login user.
 
 **Input** JSON: `userObject`.
+
 **Output** JSON: `secureUserObject`.
 
 ### [POST] /user/logout
 Logout user.
 
 **Input** JSON: `userIDObject`.
+
 **Output** JSON: `successObject`.
 
-
-      
+## Chat 
+Chat functionality implemented with (socket.io)[http://socket.io/].
+So, it's recommended to use it on client side, unless you are using native WebSocket API or another lib. In this case, you have to mimic socket.io handshaking and messaging (not the funnies activity, actually)
 
 
