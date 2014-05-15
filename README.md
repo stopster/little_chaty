@@ -5,8 +5,8 @@ Simple back end app for chat.
 Provides API to login/logout and chating.
 
 ## API overview
-API available on **`198.211.123.35:5000/api`**.
-For chat functionality with websockets, use **`198.211.123.35:5000`** address.
+API available on **`http://chaty.st.lviv.ua/api`**.
+For chat functionality with websockets, use **`http://chaty.st.lviv.ua`** address.
 
 General flow of using API:
 
