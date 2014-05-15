@@ -7,10 +7,11 @@ exports.Client = function(app){
 	});
 
 	var clientPath = process.env.FE_ACADEMY_CHAT_CLIENT_PATH;
+	var secretPublic = process.env.FE_ACADEMY_CHAT_CLIENT_DIR;
 
 	if(clientPath){
 		app.get("/" + clientPath, function(req, res){
-			res.render("client");
+			res.render("client", {secretPublic: secretPublic});
 		});
 	}
 
