@@ -4,6 +4,8 @@ Chat app
 Simple back end app for chat.
 Provides API to login/logout and chating.
 
+CLIENT LIB NEEDED: [socket.io](https://raw.githubusercontent.com/stopster/little_chaty/master/public/js/socket.io.min.js)  
+
 ## API overview
 API available on **`http://chaty.st.lviv.ua/api`**.
 For chat functionality with websockets, use **`http://chaty.st.lviv.ua`** address.
