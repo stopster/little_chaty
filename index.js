@@ -5,7 +5,7 @@ var http = require("http").createServer(app);
 
 var apiPort = 5000;
 var chatPort = 6000;
-var secretPublic = process.env.fe_academy_chat_client_dir;
+var secretPublic = process.env.FE_ACADEMY_CHAT_CLIENT_DIR;
 
 app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));

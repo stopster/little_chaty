@@ -6,7 +6,7 @@ exports.Client = function(app){
 		res.send("Chat app");
 	});
 
-	var clientPath = process.env.fe_academy_chat_client_path;
+	var clientPath = process.env.FE_ACADEMY_CHAT_CLIENT_PATH;
 
 	if(clientPath){
 		app.get("/" + clientPath, function(req, res){
