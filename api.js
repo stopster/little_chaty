@@ -5,19 +5,19 @@ var crypto = require("crypto");
 exports.Api = function(app){
 	var pre = "/api";
 	// Get user info
-	app.get(pre + "/users/:userName", function(req, res){
-		var foundUser = user.get(req.params.userName);
-		if(foundUser){
-			res.send(foundUser);
+	app.get(pre + "/users/:userName?", function(req, res){
+		var foundUsers = User.get(req.params.userName, true);
+		if(foundUsers){
+			res.send(foundUsers);
 		} else {
 			res.statusCode = 404;
-			res.send("User: '" + req.params.userName + "' not found.");
+			res.send(jstrfy({message: "User: '" + req.params.userName + "' not found."}));
 		}
 	});
 
 	// Check if user is online. Return true or false
 	app.get(pre + "/users/:userName/isLoggedIn", function(req, res){
-		res.send(User.isLoggedIn(req.params.userName));
+		res.send(jstrfy({success: User.isLoggedIn(req.params.userName)}));
 	});
 
 	// Login user

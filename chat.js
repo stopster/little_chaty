@@ -29,6 +29,7 @@ exports.Chat = function(http){
 
 		delete namedSocks[socket.id];
 		socks.splice(socks.indexOf(socket), 1);
+		
 		socks.forEach(function(s, index){
 			s.emit("userOffline", User.safe(user));
 		});
@@ -63,6 +64,7 @@ exports.Chat = function(http){
 				socks.forEach(function(s, index){
 					if(s.id == socket.id){
 						output.isYourMessage = true;
+
 					} else {
 						delete output.isYourMessage;
 					}

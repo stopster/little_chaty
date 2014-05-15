@@ -5,11 +5,13 @@ var http = require("http").createServer(app);
 
 var apiPort = 5000;
 var chatPort = 6000;
+var secretPublic = process.env.fe_academy_chat_client_dir;
 
 app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));
-
-app.set("enableClient", false);
+if(secretPublic){
+	app.use(express.static(__dirname + "/" + secretPublic));
+}
 
 var client = require("./client.js").Client(app);
 var api = require("./api.js").Api(app);

@@ -53,31 +53,30 @@ User.prototype.logout = function(deleteBy, silent){
 	}
 };
 
-User.prototype.get = function(userName, asArray){
+User.prototype.get = function(userName, returnSafe){
 	var output;
 	if(!userName){
-		if(asArray){
-			var arrUsers = [];
-			for(var name in usersLoggedIn){
-				if(usersLoggedIn.hasOwnProperty(name)){
-					arrUsers.push(usersLoggedIn[name]);
-				}
+		var output = [];
+		for(var name in usersLoggedIn){
+			if(usersLoggedIn.hasOwnProperty(name)){
+				output.push(returnSafe? this.safe(usersLoggedIn[name]): usersLoggedIn[name]);
 			}
-			output = arrUsers;
-		} else {
-			output = usersLoggedIn;
 		}
 	} else {
-		output = usersLoggedIn[userName];
+		output = returnSafe? this.safe(usersLoggedIn[userName]): usersLoggedIn[userName];
 	}
 	return output;
 };
 
 // Copy user object without id and other secure information
 User.prototype.safe = function(user){
-	var safeUser = {};
-	safeUser.name = user.name;
-	safeUser.sex = user.sex;
+	if(!user){
+		return;
+	}
+	var safeUser = {
+		name: user.name,
+		sex: user.sex	
+	};
 	return safeUser;
 }
 
