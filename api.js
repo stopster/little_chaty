@@ -45,6 +45,11 @@ exports.Api = function(app){
 		}
 	});
 
+	app.options(pre + "/users/*", function(req, res){
+		res.set("Access-Control-Allow-Origin", "*");
+		res.send();
+	});
+
 	app.post(pre + "/users/logout", function(req, res){
 		res.set("Access-Control-Allow-Origin", "*");
 		res.set("Content-type", "application/json");
