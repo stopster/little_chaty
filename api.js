@@ -24,7 +24,7 @@ exports.Api = function(app){
 	});
 
 	// Check if user is online. Return true or false
-	app.get(pre + "/users/:userName/isLoggedIn", function(req, res){
+	app.get(pre + "/users/isLoggedIn/:userName", function(req, res){
 		res.send(jstrfy({success: User.isLoggedIn(req.params.userName)}));
 	});
 

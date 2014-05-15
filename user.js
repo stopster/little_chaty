@@ -7,10 +7,8 @@ function User(){
 
 User.prototype = ee.prototype;
 User.prototype.isLoggedIn = function(user){
-	if(typeof user === "object" && user.name){
-		user = user.name;
-	}
-	if(usersLoggedIn[user]){
+	var userName = user.name? user.name: user;
+	if(usersLoggedIn[userName]){
 		return true;
 	} else {
 		return false;

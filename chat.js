@@ -47,13 +47,12 @@ exports.Chat = function(http){
 				socks.push(socket);
 				socket.emit("chatEntered");
 			} else {
-				socket.emit("error", {message: "Please, login first"});
+				socket.emit("error", {message: "Please, login first."});
 			}
 		});
 
 		socket.on("postMessage", function(data){
 			var userName = namedSocks[socket.id];
-
 			if(!User.isLoggedIn(userName)){
 				socket.emit("error", {message: "Please, login first."});
 			} else {
