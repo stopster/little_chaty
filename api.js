@@ -3,6 +3,12 @@ var jstrfy = JSON.stringify;
 var crypto = require("crypto");
 
 exports.Api = function(app){
+	app.all('*', function(req, res, next) {
+		res.header("Access-Control-Allow-Origin", "*");
+		res.header("Access-Control-Allow-Headers", "X-Requested-With");
+		next();
+	});
+
 	var pre = "/api";
 	// Get user info
 	app.get(pre + "/users/:userName?", function(req, res){
@@ -23,8 +29,6 @@ exports.Api = function(app){
 	// Login user
 	// Username need to be provided
 	app.post(pre + "/users/login", function(req, res){
-		res.set("Access-Control-Allow-Origin", "*");
-		res.set("Content-type", "application/json");
 		if(req.body && req.body.name){
 			var newUser = {
 				name: req.body.name,
@@ -45,14 +49,7 @@ exports.Api = function(app){
 		}
 	});
 
-	app.options(pre + "/users/*", function(req, res){
-		res.set("Access-Control-Allow-Origin", "*");
-		res.send();
-	});
-
 	app.post(pre + "/users/logout", function(req, res){
-		res.set("Access-Control-Allow-Origin", "*");
-		res.set("Content-type", "application/json");
 		if(req.body && req.body.id){
 			var success = User.logout({id: req.body.id});	
 		} else {
