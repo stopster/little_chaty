@@ -4,6 +4,8 @@ Chat app
 Simple back end app for chat.
 Provides API to login/logout and chating.
 
+CLIENT LIB NEEDED: [socket.io](https://raw.githubusercontent.com/stopster/little_chaty/master/public/js/socket.io.min.js)  
+
 ## API overview
 API available on **`http://chaty.st.lviv.ua/api`**.
 For chat functionality with websockets, use **`http://chaty.st.lviv.ua`** address.
@@ -66,20 +68,20 @@ All objects should be send and will be received in JSON.
 
 
 ##API methods
-### [GET] /user/isLoggedIn/:userName
+### [GET] /users/isLoggedIn/:userName
 Check, if user is online.  
 **Output**: `successObject`.  
 
-### [GET] /user/[:userName]
+### [GET] /users/[:userName]
 Get particular user object, if userName provided or array of users, which is online.  
 **Output**: `userObject/[userObject]`.  
 
-### [POST] /user/login
+### [POST] /users/login
 Login user.  
 **Input**: `userObject`.  
 **Output**: `secureUserObject`.  
 
-### [POST] /user/logout
+### [POST] /users/logout
 Logout user.  
 **Input**: `userIDObject` or `secureUserObject`.   
 **Output**: `successObject`.  
