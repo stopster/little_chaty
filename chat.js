@@ -1,7 +1,9 @@
 var User = require("./user.js").User;
 
 exports.Chat = function(http){
-	var io = require("socket.io").listen(http);
+	var io = require("socket.io").listen(http,{
+		"match origin protocol": true
+	});
 	// Store sockets that should be notified
 	var socks = [];
 	// Link socket id with user id
