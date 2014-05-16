@@ -7,6 +7,9 @@ function User(){
 
 User.prototype = ee.prototype;
 User.prototype.isLoggedIn = function(user){
+	if(!user){
+		return false;
+	}
 	var userName = user.name? user.name: user;
 	if(usersLoggedIn[userName]){
 		return true;
