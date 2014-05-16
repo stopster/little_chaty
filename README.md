@@ -8,7 +8,7 @@ CLIENT LIB NEEDED: [socket.io](https://raw.githubusercontent.com/stopster/little
 
 ## API overview
 API available on **`http://chaty.st.lviv.ua/api`**.
-For chat functionality with websockets, use **`http://chaty.st.lviv.ua`** address.
+For chat functionality with websockets, use **`http://chaty.st.lviv.ua`** address (or **`http://chaty.st.lviv.ua:5000`** when websocket falls to xhr-pooling).
 
 General flow of using API:
 
