@@ -49,7 +49,7 @@ All objects should be send and will be received in JSON.
 ### messageObject
 
     {
-        user: "someUserName",
+        user: userObject,
         message: "Some message text",
         [isYourMessage: true] - if you posted this message
     }
