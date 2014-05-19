@@ -5,88 +5,65 @@ exports.Chat = function(http){
 	var io = require("socket.io").listen(http,{
 		"match origin protocol": true
 	});
-	// Store sockets that should be notified
-	var socks = [];
-	// Link socket id with user id
-	var namedSocks = {};
 
-	function disconectUserSocket(user){
-		var socket;
-		for(var name in namedSocks){
-			if(namedSocks[name] == user.name){
-				// Found socket id
-				// search for socket now
-				socks.forEach(function(s, index){
-					if(s.id == name){
-						socket = s;
-						return;
-					}
-				});
-				break;
-			}
-		}
+	var namedSockets = {};
 
-		if(!socket){
-			return false;
-		}
-
-		delete namedSocks[socket.id];
-		socks.splice(socks.indexOf(socket), 1);
-		
-		socks.forEach(function(s, index){
-			s.emit("userOffline", User.safe(user));
-		});
-	}
 	//Allows using native WebSockets or other libs, that follows the socket.io protocol
 	io.set("destroy upgrade", false);
 
+	io.set("authorization", function(hData, callback){
+		var userId = new Cookies({ headers: hData.headers }).get("id");
+		var user;
+		if(userId){
+			user = User.getById(userId);
+		}
+
+		if(user){
+			hData.user = user;
+			callback(null, true);
+		} else {
+			callback("Please, login first.", false);
+		}
+	});
 	io.on("connection", function(socket){
-		socket.on("enterChat", function(user){
-			console.log(socket.request);
-			if(user && User.isLoggedIn(user)){
-				socks.forEach(function(s, index){
-					s.emit("userOnline", User.safe(user));
-				});
-				namedSocks[socket.id] = user.name;
-				socks.push(socket);
-				socket.emit("chatEntered");
-			} else {
-				socket.emit("error", {message: "Please, login first."});
-			}
+		socket.on("enterChat", function(){
+			var currentUser = socket.manager.handshaken[socket.id].user;
+			socket.broadcast.emit("userOnline", User.safe(currentUser));
+			socket.emit("chatEntered");
+			namedSockets[currentUser.name] = socket;
 		});
 
 		socket.on("postMessage", function(data){
-			var userName = namedSocks[socket.id];
-			if(!User.isLoggedIn(userName)){
-				socket.emit("error", {message: "Please, login first."});
-			} else {
-				var output = {
-					user: User.safe(User.get(userName)),
-					message: data.message
-				};
-				socks.forEach(function(s, index){
-					if(s.id == socket.id){
-						output.isYourMessage = true;
-
-					} else {
-						delete output.isYourMessage;
-					}
-					s.emit("message", output);
-				});
+			if(!data || !data.message){
+				socket.emit("error", {message: "Empty message is not allowed!"});
+				return;
 			}
+			var currentUser = socket.manager.handshaken[socket.id].user;
+			var output = {
+				user: User.safe(currentUser),
+				message: data.message,
+				time: Date.now()
+			};
+			socket.broadcast.emit("message", output);
+			output.isYourMessage = true;
+			socket.emit("message", output);
 		});
 
 		socket.on("disconnect", function(){
-			var user = User.get(namedSocks[socket.id]);
-			if(user){
-				disconectUserSocket(user);
+			var currentUser = socket.manager.handshaken[socket.id].user;
+			if(currentUser){
+				socket.broadcast.emit("userOffline", User.safe(currentUser));
+				delete namedSockets[currentUser.name];
 			}
 		});
 
 	});
-
 	User.on("logout", function(user){
-		disconectUserSocket(user);
+		var socket = namedSockets[user.name];
+		if(socket){
+			socket.broadcast.emit("userOffline", User.safe(user));
+			delete namedSockets[user.name];
+		}
 	});
 
 };

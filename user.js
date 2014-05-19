@@ -50,6 +50,7 @@ User.prototype.logout = function(deleteBy, silent){
 		delete usersLoggedIn[loggedOutName];
 		return true;
 	} else {
+
 		return false;
 	}
 };
@@ -69,6 +70,25 @@ User.prototype.get = function(userName, returnSafe){
 	return output;
 };
 
+User.prototype.getById = function(id, returnSafe){
+	if(!id){
+		return null;
+	}
+	for(var name in usersLoggedIn){
+		if(usersLoggedIn.hasOwnProperty(name)){
+			var user = usersLoggedIn[name];
+			if(user.id === id){
+				return returnSafe? User.safe(user): user;
+			}
+		}
+	}
+	return null;
+}
+
+User.prototype.attachFile = function(user, imageUrl){
+	usersLoggedIn[user.name].imageUrl = imageUrl;
+}
+
 // Copy user object without id and other secure information
 User.prototype.safe = function(user){
 	if(!user){
@@ -76,7 +96,8 @@ User.prototype.safe = function(user){
 	}
 	var safeUser = {
 		name: user.name,
-		sex: user.sex
+		sex: user.sex,
+		imageUrl: user.imageUrl
 	};
 	return safeUser;
 };

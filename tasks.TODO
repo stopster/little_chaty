@@ -1,9 +1,11 @@
 Little chaty:
   User interaction:
-    ☐ Add cookies support @started(14-05-18 12:28)
+    ✔ Add cookies support @started(14-05-18 12:28) @done (14-05-19 13:08) @lasted(1 day, 0:40:00)
     ☐ Logout user, when innactive for a couple of minutes @started(14-05-17 14:29)
     ✔ Handle file upload as a binary @done (14-05-17 23:05)
-    ☐ Save file with some id (timestamp)
-    ☐ Remove file on user logs out
+    ✔ Save file with some id (timestamp) @done (14-05-19 18:15)
+    ✔ Remove file on user logs out @done (14-05-19 18:34)
+    ☐ Clear all files on server started @started(14-05-19 19:15)
   Chat:
-    ☐ Add time to message
+    ✔ Add time to message @started(14-05-19 15:48) @done (14-05-19 16:11) @lasted(0:23:00)
+    ✔ Validaate empty message @done (14-05-19 15:50)

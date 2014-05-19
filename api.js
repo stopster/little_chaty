@@ -1,8 +1,8 @@
 var User = require("./user.js").User;
-var fs = require("fs");
 var jstrfy = JSON.stringify;
 var crypto = require("crypto");
 var Cookies = require("cookies");
+var fs = require("fs");
 
 exports.Api = function(app){
 	app.all('*', function(req, res, next) {
@@ -28,6 +28,17 @@ exports.Api = function(app){
 	// Check if user is online. Return true or false
 	app.get(pre + "/users/isLoggedIn/:userName", function(req, res){
 		res.send(jstrfy({success: User.isLoggedIn(req.params.userName)}));
+	});
+
+	app.post(pre + "/users/authorize", function(req, res){
+		var cookies = new Cookies(req, res);
+		var user = User.getById(cookies.get("id"));
+		if(user){
+			res.send(jstrfy(user));
+		} else {
+			res.statusCode = 403;
+			res.send(jstrfy({message: "You are not logged in or your session expired."}));
+		}
 	});
 
 	// Login user
@@ -71,8 +82,65 @@ exports.Api = function(app){
 		}
 	});
 
+	var uploadsDir = app.get("userUploads");
 	app.post(pre + "/users/upload", function(req, res){
-		req.pipe(fs.createWriteStream(__dirname + "/uploads/test2.png"));
-		res.send(jstrfy({success: true}));
+		var user = User.getById(new Cookies(req, res).get("id"));
+		var fileType = req.get("Content-Type");
+		var fileSize = req.get("Content-Length");
+		var allowedTypes = ["image/png", "image/jpeg", "image/gif"];
+		var onSuccess = function(fileName){
+			var imageUrl = uploadsDir + "/" + fileName;
+			if(user.imageUrl){
+				deleteFile(user.imageUrl);
+			}
+			User.attachFile(user, imageUrl);	
+			res.send(jstrfy({imageUrl: imageUrl}));
+		}
+		var onError = function(message, code){
+			res.statusCode = code && parseInt(code, 10)? code: 400;
+			res.send(jstrfy({message: message? message: "Something went wrong. Please, check documentation to the API."}));
+		}
+		if(!user){
+			onError("Please, login first", 403);
+			return;
+		}
+
+		if(allowedTypes.indexOf(fileType) === -1){
+			onError("Not supported type. Please, send image as binary with proper Content-Type header. Following allowed: " + allowedTypes.join(", "), 400);
+			return;
+		}
+
+		// If file size greater than 2 Mb
+		if(fileSize/1024/1024 > 2){
+			onError("File is too large. Only files, lighter than 2Mb allowed.", 400);
+			return;
+		}
+
+		safeFile(req, fileType, onSuccess, onError);
 	});
+
+	User.on("logout", function(user){
+		if(user.imageUrl){
+			fs.unlink(__dirname + user.imageUrl);
+		}
+	});
+
+	function safeFile(readable, fileType, onSuccess, onError){
+		var fileName = "image-" + Date.now() + "." + fileType.substr(6);
+		readable.pipe(fs.createWriteStream(__dirname + uploadsDir + "/" + fileName));
+		readable.on("end", function(){
+			onSuccess(fileName);
+		});
+		readable.on("error", function(){
+			onError("File wasn't saved. Something went wrong. Please, try again or contact site admin.", 500);
+		});
+	}
+
+	function deleteFile(imageUrl){
+		fs.unlink(__dirname + imageUrl);
+	}
 };
+
+
+
+

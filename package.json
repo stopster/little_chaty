@@ -9,6 +9,8 @@
 		"socket.io": "latest",
 		"jade": "latest",
 		"body-parser": "latest",
-		"cookies": "latest"
+		"cookies": "latest",
+		"rimraf": "latest",
+		"formidable": "latest"
 	}
 }

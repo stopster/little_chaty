@@ -19,11 +19,16 @@ html
 			br/
 			button.login login
 			button.logout logout
+		div.testForm
+			form.test-multipart(method="POST", action="/api/users/upload", enctype="multipart/form-data")
+				input.image(type="file")
+				input.sendImage(type="submit")
 		div.container
 			h2 Chat app
 			div.messages
 			textarea.message-text
 			input.send(type="button", value="send")
+
 
 		script(type="text/javascript", src="/js/zepto.min.js")
 		script(type="text/javascript", src="/js/socket.io.min.js")
