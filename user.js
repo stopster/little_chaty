@@ -57,7 +57,7 @@ User.prototype.logout = function(deleteBy, silent){
 User.prototype.get = function(userName, returnSafe){
 	var output;
 	if(!userName){
-		var output = [];
+		output = [];
 		for(var name in usersLoggedIn){
 			if(usersLoggedIn.hasOwnProperty(name)){
 				output.push(returnSafe? this.safe(usersLoggedIn[name]): usersLoggedIn[name]);
@@ -76,9 +76,9 @@ User.prototype.safe = function(user){
 	}
 	var safeUser = {
 		name: user.name,
-		sex: user.sex	
+		sex: user.sex
 	};
 	return safeUser;
-}
+};
 
 exports.User = new User();

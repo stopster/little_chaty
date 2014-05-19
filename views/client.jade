@@ -14,12 +14,15 @@ html
 			input.sex(type="radio", name="sex", value="female")
 			span female
 			br/
+			div.dropImage
+				| Drop your image here!
+			br/
 			button.login login
 			button.logout logout
 		div.container
 			h2 Chat app
 			div.messages
-			input.message-text(type="text")
+			textarea.message-text
 			input.send(type="button", value="send")
 
 		script(type="text/javascript", src="/js/zepto.min.js")

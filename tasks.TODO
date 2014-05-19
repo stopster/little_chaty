@@ -1,0 +1,9 @@
+Little chaty:
+  User interaction:
+    ☐ Add cookies support @started(14-05-18 12:28)
+    ☐ Logout user, when innactive for a couple of minutes @started(14-05-17 14:29)
+    ✔ Handle file upload as a binary @done (14-05-17 23:05)
+    ☐ Save file with some id (timestamp)
+    ☐ Remove file on user logs out
+  Chat:
+    ☐ Add time to message

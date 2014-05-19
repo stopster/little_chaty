@@ -1,4 +1,5 @@
 var User = require("./user.js").User;
+var Cookies = require("cookies");
 
 exports.Chat = function(http){
 	var io = require("socket.io").listen(http,{
@@ -41,6 +42,7 @@ exports.Chat = function(http){
 
 	io.on("connection", function(socket){
 		socket.on("enterChat", function(user){
+			console.log(socket.request);
 			if(user && User.isLoggedIn(user)){
 				socks.forEach(function(s, index){
 					s.emit("userOnline", User.safe(user));

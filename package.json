@@ -3,10 +3,12 @@
 	"description": "Back-end app for FE academy.",
 	"author": "st",
 	"version": "0.0.1",
+	"repository": "https://github.com/stopster/little_chaty",
 	"dependencies": {
 		"express": "latest",
 		"socket.io": "latest",
 		"jade": "latest",
-		"body-parser": "latest"
+		"body-parser": "latest",
+		"cookies": "latest"
 	}
 }

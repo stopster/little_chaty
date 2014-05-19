@@ -22,3 +22,20 @@ div{
 	padding: 4px 6px;
 	font-size: 14px;
 }
+.dropImage{
+	width: 160px;
+	height: 80px;
+	margin-top: 10px;
+	padding-top: 15px;
+	background: linear-gradient(to bottom right, #efefef, #fefefe);
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	box-shadow: 0 0 4px #cecece;
+	color: #aaa;
+	font-weight: bold;
+	font-family: Arial, sans-serif;
+	text-align: center;
+}
+.dropImage.glow{
+	box-shadow: 0 0 4px orange;
+}

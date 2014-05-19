@@ -1,6 +1,8 @@
 var User = require("./user.js").User;
+var fs = require("fs");
 var jstrfy = JSON.stringify;
 var crypto = require("crypto");
+var Cookies = require("cookies");
 
 exports.Api = function(app){
 	app.all('*', function(req, res, next) {
@@ -35,7 +37,7 @@ exports.Api = function(app){
 			var newUser = {
 				name: req.body.name,
 				sex: req.body.sex? req.body.sex: null,
-				id: crypto.createHash("sha1").update("" + Math.random()*10000).digest("hex")
+				id: crypto.createHash("sha1").update("" + Math.random()*1000000 + req.body.name).digest("hex")
 			};
 
 			if(User.isLoggedIn(newUser)){
@@ -43,6 +45,8 @@ exports.Api = function(app){
 				res.send(jstrfy({message: "User already logged in. Choose another name."}));
 			} else {
 				User.login(newUser);
+				var cookies = new Cookies(req, res);
+				cookies.set("id", newUser.id);
 				res.send(jstrfy(newUser));
 			}
 		} else {
@@ -52,17 +56,23 @@ exports.Api = function(app){
 	});
 
 	app.post(pre + "/users/logout", function(req, res){
-		if(req.body && req.body.id){
-			var success = User.logout({id: req.body.id});	
+		var success;
+		var cookies = new Cookies(req, res);
+		var userId = cookies.get("id");
+
+		userId = userId? userId: req.body.id;
+		success = User.logout({id: userId});
+
+		if(success){
+			res.send({success: true});
 		} else {
 			res.statusCode = 404;
 			res.send(jstrfy({message: "Please, provide user id received during login."}));
 		}
-		if(success){
-			res.send(jstrfy({success: true}));
-		} else {
-			res.statusCode = 500;
-			res.send(jstrfy({message: "Could not logout user. Check user id, that you send and try again."}));
-		}
+	});
+
+	app.post(pre + "/users/upload", function(req, res){
+		req.pipe(fs.createWriteStream(__dirname + "/uploads/test2.png"));
+		res.send(jstrfy({success: true}));
 	});
 };
