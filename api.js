@@ -3,6 +3,7 @@ var jstrfy = JSON.stringify;
 var crypto = require("crypto");
 var Cookies = require("cookies");
 var fs = require("fs");
+var formidable = require("formidable");
 
 exports.Api = function(app){
 	app.all('*', function(req, res, next) {
@@ -44,25 +45,14 @@ exports.Api = function(app){
 	// Login user
 	// Username need to be provided
 	app.post(pre + "/users/login", function(req, res){
-		if(req.body && req.body.name){
-			var newUser = {
-				name: req.body.name,
-				sex: req.body.sex? req.body.sex: null,
-				id: crypto.createHash("sha1").update("" + Math.random()*1000000 + req.body.name).digest("hex")
-			};
-
-			if(User.isLoggedIn(newUser)){
-				res.statusCode = 409;
-				res.send(jstrfy({message: "User already logged in. Choose another name."}));
-			} else {
-				User.login(newUser);
-				var cookies = new Cookies(req, res);
-				cookies.set("id", newUser.id);
-				res.send(jstrfy(newUser));
-			}
+		var contType = req.get("Content-Type");
+		if(/^application\/json/i.test(contType)){
+			handleUserDataJson(req, res);
+		} else if(/^(multipart\/form\-data)/i.test(contType)){
+			handleUserDataForm(req, res);
 		} else {
 			res.statusCode = 400;
-			res.send(jstrfy({message:"Username is missing."}));
+			res.send(jstrfy({message: "Please, send proper Content-Type header (application/json and multipart/form-data allowed)."}))
 		}
 	});
 
@@ -111,7 +101,7 @@ exports.Api = function(app){
 		}
 
 		// If file size greater than 2 Mb
-		if(fileSize/1024/1024 > 2){
+		if(fileSize > 2*1024*1024){
 			onError("File is too large. Only files, lighter than 2Mb allowed.", 400);
 			return;
 		}
@@ -138,6 +128,78 @@ exports.Api = function(app){
 
 	function deleteFile(imageUrl){
 		fs.unlink(__dirname + imageUrl);
+	}
+
+	function handleUserData(name, sex){
+		if(!name){
+			return {success: false, code: 400, message: "Name is required!"};
+		}
+		var newUser = {
+			name: name,
+			sex : sex && /male|female/i.test(sex)? sex: null,
+			id  : crypto.createHash("sha1").update("" + Math.random()*1000000 + name).digest("hex")
+		}
+		if(User.isLoggedIn(newUser)){
+			return {success: false, code: 409, message: "User already logged in. Choose another name."};
+		}
+
+		var success = User.login(newUser);
+		return {success: success, user: newUser};
+	}
+
+	function handleUserDataJson(req, res){
+		if(req.body){
+			var loginResult = handleUserData(req.body.name, req.body.sex);
+			var user;
+			if(loginResult.success){
+				user = loginResult.user;
+				var cookies = new Cookies(req, res);
+				cookies.set("id", user.id);
+				res.send(jstrfy(user));
+			} else {
+				res.statusCode = loginResult.code;
+				res.send(jstrfy({message: loginResult.message}));
+			}
+		} else {
+			res.statusCode = 400;
+			res.send({message: "Please, provide data in json"});
+		}
+	}
+
+	function handleUserDataForm(req, res){
+		var form = new formidable.IncomingForm();
+		var user;
+		form.parse(req, function(err, fields, files){
+			var loginResult = handleUserData(fields.name, fields.sex);
+			if(loginResult.success){
+				user = loginResult.user;
+				var onSuccess = function(){
+					var cookies = new Cookies(req, res);
+					cookies.set("id", user.id);
+					res.send(jstrfy(user));
+				}
+
+				if(files && files.image){
+					var file = files.image;
+					var s = fs.createReadStream(file.path);
+					safeFile(s, file.type, function(fileName){
+						User.attachFile(user, fileName);
+						onSuccess();
+					}, function(message, code){
+						res.statusCode=code;
+						res.send({message: message});
+					})
+				} else {
+					onSuccess();
+				}
+			} else {
+				res.statusCode = loginResult.code;
+				res.send(jstrfy({message: loginResult.message}));
+			}
+		});
+		form.on("error", function(){
+			console.log(arguments);
+		});
 	}
 };
 
