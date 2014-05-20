@@ -5,24 +5,22 @@ html
 		link(rel="stylesheet", type="text/css", href="/css/style.css")
 	body
 		div.login-form
-			span name
-			br/
-			input.username(type="text")
-			br/
-			input.sex(type="radio", name="sex", value="male")
-			span male
-			input.sex(type="radio", name="sex", value="female")
-			span female
-			br/
-			div.dropImage
-				| Drop your image here!
-			br/
-			button.login login
+			form.test-multipart(method="POST", action="/api/users/login", enctype="multipart/form-data")
+				span name
+				br/
+				input.username(type="text", name="name")
+				br/
+				input.sex(type="radio", name="sex", value="male")
+				span male
+				input.sex(type="radio", name="sex", value="female")
+				span female
+				br/
+				div.dropImage
+					| Drop your image here!
+				br/
+				input.image(type="file", name="image")
+				input.login(type="submit", value="login")
 			button.logout logout
-		div.testForm
-			form.test-multipart(method="POST", action="/api/users/upload", enctype="multipart/form-data")
-				input.image(type="file")
-				input.sendImage(type="submit")
 		div.container
 			h2 Chat app
 			div.messages

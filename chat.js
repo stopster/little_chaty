@@ -61,8 +61,7 @@ exports.Chat = function(http){
 	User.on("logout", function(user){
 		var socket = namedSockets[user.name];
 		if(socket){
-			socket.broadcast.emit("userOffline", User.safe(user));
-			delete namedSockets[user.name];
+			socket.disconnect();
 		}
 	});
 

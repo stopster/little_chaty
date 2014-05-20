@@ -169,6 +169,7 @@ exports.Api = function(app){
 	function handleUserDataForm(req, res){
 		var form = new formidable.IncomingForm();
 		var user;
+		var allowedTypes = ["image/png", "image/jpeg", "image/gif"];
 		form.parse(req, function(err, fields, files){
 			var loginResult = handleUserData(fields.name, fields.sex);
 			if(loginResult.success){
@@ -181,14 +182,31 @@ exports.Api = function(app){
 
 				if(files && files.image){
 					var file = files.image;
+					var onError = function(message, code){
+						res.statusCode = code && parseInt(code, 10)? code: 400;
+						res.send(jstrfy({message: message? message: "Something went wrong. Please, check documentation to the API."}));
+					}
+					if(!user){
+						onError("Please, login first", 403);
+						return;
+					}
+
+					if(allowedTypes.indexOf(file.type) === -1){
+						onError("Not supported type. Please, send image as binary with proper Content-Type header or as multipart-data. Following image formats allowed: " + allowedTypes.join(", "), 400);
+						return;
+					}
+
+					// If file size greater than 2 Mb
+					if(file.size > 2*1024*1024){
+						onError("File is too large. Only files, lighter than 2Mb allowed.", 400);
+						return;
+					}
+
 					var s = fs.createReadStream(file.path);
 					safeFile(s, file.type, function(fileName){
-						User.attachFile(user, fileName);
+						User.attachFile(user, app.get("userUploads") + "/" + fileName);
 						onSuccess();
-					}, function(message, code){
-						res.statusCode=code;
-						res.send({message: message});
-					})
+					}, onError);
 				} else {
 					onSuccess();
 				}
@@ -196,9 +214,6 @@ exports.Api = function(app){
 				res.statusCode = loginResult.code;
 				res.send(jstrfy({message: loginResult.message}));
 			}
-		});
-		form.on("error", function(){
-			console.log(arguments);
 		});
 	}
 };
