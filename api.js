@@ -65,6 +65,7 @@ exports.Api = function(app){
 		success = User.logout({id: userId});
 
 		if(success){
+			cookies.set("id", "");
 			res.send({success: true});
 		} else {
 			res.statusCode = 404;
