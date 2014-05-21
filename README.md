@@ -10,7 +10,7 @@ CLIENT LIB NEEDED: [socket.io](https://raw.githubusercontent.com/stopster/little
 Features added:
 
 + *API method for login changed*. Now, you can upload images (one per user). Please, check [login API method](#post-userslogin)
-+ *Authorization availabe*. So, you can check, if you're logged in the system. Check [authorization API method](#post-usersauth)
++ *Authorization availabe*. So, you can check, if you're logged in the system. Check [authorization API method](#post-usersauthorize)
 **Note**: it doesn't work for localhost.
 + *Uploading images*: you can upload image during [login](#post-userslogin) or after login process in order to add or change image, using [upload](#post-usersupload) API method.
 + [`userObject`](#userobject) and [`secureUserObject`](#secureuserobject) now have `imageUrl` field. It is relative path to uploaded image, if there is any, or `null`.  
@@ -68,6 +68,12 @@ All objects should be send and will be received in JSON.
         user: userObject,
         message: "Some message text",
         [isYourMessage: true] - if you posted this message
+    }
+
+### imageObject
+
+    {
+        imageUrl: relativePath (e.g. */uploads/image-140002342562.png*) or `null`
     }
 
 ### successObject
@@ -138,6 +144,12 @@ Logout user.
 Try to get already loggedin user. Uses cookies, so does NOT work for LOCALHOST.  
 **Input**:  
 **Output**: `secureUserObject` 
+
+### [POST] /users/upload
+Uploads image for particular user. User should have Cookie `chatId` with his id, received during login.
+Method accepts binary image up to 2Mb with proper contentType header set (one of the following: `"image/png", "image/jpeg", "image/gif"`).  
+**Input**: binary file content in [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob)
+**Output**: `imageObject`  
 
 ## Chat 
 Chat functionality implemented with [socket.io](http://socket.io/).
