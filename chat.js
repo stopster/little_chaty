@@ -57,6 +57,7 @@ exports.Chat = function(http){
 
 		socket.on("disconnect", function(){
 			var currentUser = socket.manager.handshaken[socket.id].user;
+			currentUser = currentUser || socket.store.data.user;
 			if(currentUser){
 				socket.broadcast.emit("userOffline", User.safe(currentUser));
 				delete namedSockets[socket.id];
@@ -94,6 +95,7 @@ exports.Chat = function(http){
 			if(namedSockets[i] === user.name){
 				var socket = io.sockets.sockets[i];
 				if(socket){
+					socket.store.data.user = user;
 					socket.disconnect();
 				}
 			}
