@@ -6,6 +6,15 @@ Provides API to login/logout and chating.
 
 CLIENT LIB NEEDED: [socket.io](https://raw.githubusercontent.com/stopster/little_chaty/master/public/js/socket.io.min.js)  
 
+## API updated (v.0.0.2)
+Features added:
+
++ API method for login changed. Now, you can upload images (one per user). Please, check [login API method](#login)
++ Authorization availabe. So, you can check, if you're logged in the system. Check [authorization API method](#auth)
+Note: it doesn't work for localhost.
++ Uploading images: you can upload image during [login](#users-login) or after login process in order to add or change image, using [upload](#users-upload) API method.
++ [`userObject`](#userobject) and [`secureUserObject`](#secureUserObject) now have `imageUrl` field. It is relative path to uploaded image, if there is any, or `null`.  
+
 ## API overview
 API available on **`http://chaty.st.lviv.ua/api`**.
 For chat functionality with websockets, use **`http://chaty.st.lviv.ua`** address (or **`http://chaty.st.lviv.ua:5000`** when websocket falls to xhr-pooling).
@@ -23,12 +32,19 @@ General flow of using API:
 
 ## API objects
 All objects should be send and will be received in JSON.
+### basicUserObject
+
+    {
+        name: "someName",
+        sex: ["male"/"female"]
+    }
+
 ### userObject
 
     {
         name: "someName"
         sex: ["male"/"female"]
-        image: STILL IN PROGRESS! (sorry for that :))
+        imageUrl: relativePath (e.g. */uploads/image-140002342562.png*) or `null`
     }
 
 ### secureUserObject
@@ -37,7 +53,7 @@ All objects should be send and will be received in JSON.
         id: "23fasdbas323rfsadf32fawe32f2" (hash)
         name: "someName"
         sex: ["male"/"female"]
-        image: STILL IN PROGRESS! (sorry for that :))
+        imageUrl: relativePath (e.g. */uploads/image-140002342562.png*) or `null`
     }
 
 ### userIDObject
@@ -77,21 +93,55 @@ Get particular user object, if userName provided or array of users, which is onl
 **Output**: `userObject/[userObject]`.  
 
 ### [POST] /users/login
-Login user.  
-**Input**: `userObject`.  
+Login user. Could be done in two ways.
+#### First: contentType is set to `application/json` or `application/x-www-form-urlencoded` (default for forms)
+**Input**: `basicUserObject`.  
 **Output**: `secureUserObject`.  
+#### Second: contentType is set to `multipart/form-data`
+**Input**: [HTML FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) with fields, that has proper names.  
+Names accepted:
+`name`* - stands for user name, required,  
+`sex` - stands for user sex (male/female),  
+`image` - [File](https://developer.mozilla.org/en-US/docs/Web/API/File).  
+**Output**: `secureUserObject`
+
+**Example**:
+
+    <form method="POST" enctype="multipart/form-data" class="login-form">
+      <input name="name" type="text"/>
+      <input name="sex" type="radio" value="male"/>
+      <input name="sex" type="radio" value="female"/>
+      <input name="image" type="file"/>
+    </form>
+
+    $(".login-form").submit(function(event){
+        event.preventDefault();
+        var thisForm = this;
+        $.ajax({
+            url: apiUrl + "/users/login",
+            data: new FormData(thisForm),
+            contentType: "multipart/form-data",
+            processData: false,
+            success: funtion(){...}
+        });
+    });
 
 ### [POST] /users/logout
 Logout user.  
 **Input**: `userIDObject` or `secureUserObject`.   
 **Output**: `successObject`.  
 
+### [POST] /users/authorize
+Try to get already loggedin user. Uses cookies, so does NOT work for LOCALHOST.
+**Input**: 
+**Output**: `secureUserObject` 
+
 ## Chat 
 Chat functionality implemented with [socket.io](http://socket.io/).
 So, it's recommended to use it on client side, unless you are using native WebSocket API or another lib. In this case, you have to mimic socket.io [protocol](https://github.com/LearnBoost/socket.io-spec).
 ### [client event] enterChat
 Join your socket to chat room.  
-**Input**: `userObject`.  
+**Input**: `userIDObject`.  
 Also, it triggers server event [`chatEntered`](#server-event-chatentered) event for you, and `userOnline` for all users online.  Example:
     
     var socket = io.connect(chatUrl);

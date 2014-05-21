@@ -25,11 +25,12 @@ exports.Chat = function(http){
 
 			if(!currentUser){
 				socket.emit("error", {message: "Please, login first"});
+				namedSockets[socket.id] = user.name;
 				return;
 			}
 			socket.broadcast.emit("userOnline", User.safe(currentUser));
 			socket.emit("chatEntered");
-			namedSockets[currentUser.name] = socket;
+			namedSockets[socket.id] = currentUser.name;
 		});
 
 		socket.on("postMessage", function(data){
@@ -38,7 +39,7 @@ exports.Chat = function(http){
 				return;
 			}
 			var currentUser = socket.manager.handshaken[socket.id].user;
-			currentUser = currentUser? currentUser: tryToAuthUser(null, data.user);
+			currentUser = currentUser? currentUser: tryToAuthUser(null, User.get(namedSockets[socket.id]), socket);
 
 			if(!currentUser){
 				socket.emit("error", {message: "Please, login first"});
@@ -58,13 +59,13 @@ exports.Chat = function(http){
 			var currentUser = socket.manager.handshaken[socket.id].user;
 			if(currentUser){
 				socket.broadcast.emit("userOffline", User.safe(currentUser));
-				delete namedSockets[currentUser.name];
+				delete namedSockets[socket.id];
 			}
 		});
 
 	});
 	
-	function tryToAuthUser(headers, userData){
+	function tryToAuthUser(headers, userData, socket){
 		var userId;
 		var cookies;
 		if(headers){
@@ -72,8 +73,14 @@ exports.Chat = function(http){
 		}
 		if(cookies){
 			userId = cookies.get("chatId");
-		} else if(userData && userData.id){
-			userId = userData.id;
+		} else if(userData){
+			if(userData.id){
+				userId = userData.id;
+			} else if(userData.name && socket){
+				if(namedSockets[socket.id] == userData.name){
+					userId = Users.get(userData.name).id;
+				}
+			}
 		}
 		var user =	User.getById(userId);
 		if(user){

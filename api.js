@@ -153,7 +153,7 @@ exports.Api = function(app){
 			if(loginResult.success){
 				user = loginResult.user;
 				var cookies = new Cookies(req, res);
-				cookies.set("chatId", user.id);
+				// cookies.set("chatId", user.id);
 				res.send(jstrfy(user));
 			} else {
 				res.statusCode = loginResult.code;
