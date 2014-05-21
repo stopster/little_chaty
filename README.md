@@ -11,9 +11,10 @@ Features added:
 
 + *API method for login changed*. Now, you can upload images (one per user). Please, check [login API method](#post-userslogin)
 + *Authorization availabe*. So, you can check, if you're logged in the system. Check [authorization API method](#post-usersauthorize)
-**Note**: it doesn't work for localhost.
+**Note**: it doesn't work for localhost,so try to setup some unreal domain (e.g. www.myawesomedomainforchat.com and redirect it to localhost using file `hosts`).
 + *Uploading images*: you can upload image during [login](#post-userslogin) or after login process in order to add or change image, using [upload](#post-usersupload) API method.  
-***Uploaded images*** available on the same domain **`http://chaty.st.lviv.ua`**. E.g. `http://chaty.st.lviv.ua/uploads/image-14000231231d.png`
+***Uploaded images*** available on the same domain **`http://chaty.st.lviv.ua`**.  
+E.g. `http://chaty.st.lviv.ua/uploads/image-14000231231d.png`
 + [`userObject`](#userobject) and [`secureUserObject`](#secureuserobject) now have `imageUrl` field. It is relative path to uploaded image, if there is any, or `null`.  
 
 ## API overview
@@ -39,6 +40,14 @@ All objects should be send and will be received in JSON.
         name: "someName",
         sex: ["male"/"female"]
     }
+
+### loginUserDataObject
+
+    {
+        name: "someName", (required)
+        sex: ["male"/"female"],
+        image: "data:image/png;base64,asdqwasdf23f..."
+    }  
 
 ### userObject
 
@@ -102,8 +111,31 @@ Get particular user object, if userName provided or array of users, which is onl
 ### [POST] /users/login
 Login user. Could be done in two ways.  
 ######First: contentType is set to `application/json` or `application/x-www-form-urlencoded` (default for forms)  
-**Input**: `basicUserObject`.  
+**Input**: `loginUserDataObject`.  
 **Output**: `secureUserObject`.  
+
+**Example**:
+    
+    var loginUser = function(name, sex, image){
+        $.ajax({
+            url: apiUrl + "/users/login",
+            data: JSON.stringify({name: name, sex: sex, image: image}),
+            contentType: "application/json",
+            success: function(){...}
+        });
+    }
+    $(".login").click(function(){
+        var name = "st",
+            sex = "male",
+            image = null,
+            fr = new FileReader();
+        fr.onload = function(event){
+            image = event.target.result;
+            loginUser(name, sex, image);
+        };
+
+        fr.readAsDataURL($("input[image]").get(0).files[0]);
+    });
 
 ######Second: contentType is set to `multipart/form-data`  
 **Input**: [HTML FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) with fields, that has proper names.  

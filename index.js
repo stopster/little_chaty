@@ -4,7 +4,7 @@ var app = new express();
 var http = require("http").createServer(app);
 var fs = require("fs");
 
-var apiPort = 5000;
+var apiPort = 4000;
 var secretPublic = process.env.FE_ACADEMY_CHAT_CLIENT_DIR;
 
 app.set("userUploads", "/uploads");
@@ -12,7 +12,9 @@ app.set("userUploads", "/uploads");
 require("rimraf").sync(__dirname + app.get("userUploads"));
 fs.mkdirSync(__dirname + app.get("userUploads"), "775");
 
-app.use(bodyParser());
+app.use(bodyParser({
+	limit: 3*1024*1024
+}));
 app.use(express.static(__dirname + '/public'));
 app.use(app.get("userUploads"), express.static(__dirname + app.get("userUploads")));
 

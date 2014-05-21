@@ -72,11 +72,11 @@ exports.Api = function(app){
 	});
 
 	var uploadsDir = app.get("userUploads");
+	var allowedTypes = ["image/png", "image/jpeg", "image/gif"];
 	app.post(pre + "/users/upload", function(req, res){
 		var user = User.getById(new Cookies(req, res).get("chatId"));
 		var fileType = req.get("Content-Type");
 		var fileSize = req.get("Content-Length");
-		var allowedTypes = ["image/png", "image/jpeg", "image/gif"];
 		var onSuccess = function(fileName){
 			var imageUrl = uploadsDir + "/" + fileName;
 			if(user.imageUrl){
@@ -93,7 +93,6 @@ exports.Api = function(app){
 			onError("Please, login first", 403);
 			return;
 		}
-		console.log(fileType);
 		if(allowedTypes.indexOf(fileType) === -1){
 			onError("Not supported type. Please, send image as binary with proper Content-Type header. Following allowed: " + allowedTypes.join(", "), 400);
 			return;
@@ -116,48 +115,102 @@ exports.Api = function(app){
 
 	function safeFile(readable, fileType, onSuccess, onError){
 		var fileName = "image-" + Date.now() + "." + fileType.substr(6);
-		readable.pipe(fs.createWriteStream(__dirname + uploadsDir + "/" + fileName));
-		readable.on("end", function(){
-			onSuccess(fileName);
-		});
-		readable.on("error", function(){
-			onError("File wasn't saved. Something went wrong. Please, try again or contact site admin.", 500);
-		});
+		var filePath = __dirname + uploadsDir + "/" + fileName;
+		if(readable.pipe instanceof Function){
+			readable.pipe(fs.createWriteStream(filePath));
+			readable.on("end", function(){
+				onSuccess(fileName);
+			});
+			readable.on("error", function(){
+				onError("File wasn't saved. Something went wrong. Please, try again or contact site admin.", 500);
+			});
+		} else if(typeof readable === "string"){
+			fs.writeFile(filePath, readable, "base64", function(err){
+				if(err){
+					onError("File wasn't saved. Something went wrong. Please, try again or contact site admin.", 500);
+				} else {
+					onSuccess(fileName);
+				}
+			});
+		} else {
+			onError("Unsupported format. Please, provide binary or base64 encoded image data.", 400);
+		}
 	}
 
-	function deleteFile(imageUrl){
-		fs.unlink(__dirname + imageUrl);
+	function deleteFile(imageUrl, onError){
+		fs.unlink(__dirname + imageUrl, function(err){
+			err && onError && onError(err);
+		});
 	}
 
 	function handleUserData(name, sex){
 		if(!name){
 			return {success: false, code: 400, message: "Name is required!"};
 		}
+		if(User.isLoggedIn(name)){
+			return {success: false, code: 409, message: "User already logged in. Choose another name."};
+		}
+		
 		var newUser = {
 			name: name,
 			sex : sex && /male|female/i.test(sex)? sex: null,
 			id  : crypto.createHash("sha1").update("" + Math.random()*1000000 + name).digest("hex")
 		}
-		if(User.isLoggedIn(newUser)){
-			return {success: false, code: 409, message: "User already logged in. Choose another name."};
-		}
-
-		var success = User.login(newUser);
-		return {success: success, user: newUser};
+		return {success: true, user: newUser};
 	}
 
 	function handleUserDataJson(req, res){
 		if(req.body){
-			var loginResult = handleUserData(req.body.name, req.body.sex);
-			var user;
-			if(loginResult.success){
-				user = loginResult.user;
-				var cookies = new Cookies(req, res);
-				// cookies.set("chatId", user.id);
-				res.send(jstrfy(user));
-			} else {
-				res.statusCode = loginResult.code;
-				res.send(jstrfy({message: loginResult.message}));
+			var imageName;
+			var onSuccess = function(){
+				var loginResult = handleUserData(req.body.name, req.body.sex);
+				var user;
+				if(loginResult.success){
+					var loginSuccess = User.login(loginResult.user);
+					if(loginSuccess){
+						user = loginResult.user;
+						if(imageName){
+							User.attachFile(user, uploadsDir + "/" + imageName);
+						}
+						var cookies = new Cookies(req, res);
+						cookies.set("chatId", user.id);
+						res.send(jstrfy(user));
+					} else {
+						res.statusCode = 400;
+						res.send({message: "Please, provide data in json"});
+					}
+					
+				} else {
+					res.statusCode = loginResult.code;
+					res.send(jstrfy({message: loginResult.message}));
+				}
+			}
+			var onError = function(){
+				res.statusCode = 500;
+				res.send(jstrfy({message: "Can't save image. Try again."}));
+			}
+			if(req.body.image){
+				var image = req.body.image;
+				var imageBegin = image.substr(0, 22);
+				var imageType;
+				for(var i=0; i<allowedTypes.length; i++){
+					if(imageBegin.indexOf(allowedTypes[i]) != -1 && imageBegin.indexOf("base64") != -1){
+						imageType = allowedTypes[i];
+						break;
+					}
+				}
+				if(imageType){
+					image = image.replace(/^data:.+base64,/, "");
+					safeFile(image, imageType, function(fileName){
+						imageName = fileName;
+						onSuccess();
+					}, onError);
+
+				} else {
+					onError();
+				}
+			} else{
+				onSuccess();
 			}
 		} else {
 			res.statusCode = 400;
@@ -168,15 +221,20 @@ exports.Api = function(app){
 	function handleUserDataForm(req, res){
 		var form = new formidable.IncomingForm();
 		var user;
-		var allowedTypes = ["image/png", "image/jpeg", "image/gif"];
 		form.parse(req, function(err, fields, files){
 			var loginResult = handleUserData(fields.name, fields.sex);
 			if(loginResult.success){
 				user = loginResult.user;
 				var onSuccess = function(){
-					var cookies = new Cookies(req, res);
-					cookies.set("chatId", user.id);
-					res.send(jstrfy(user));
+					user = User.login(user);
+					if(user){
+						var cookies = new Cookies(req, res);
+						cookies.set("chatId", user.id);
+						res.send(jstrfy(user));
+					} else {
+						res.statusCode = 400;
+						res.send(jstrfy({message: "Provide valid data"}));
+					}
 				}
 
 				if(files && files.image){
