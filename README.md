@@ -9,11 +9,11 @@ CLIENT LIB NEEDED: [socket.io](https://raw.githubusercontent.com/stopster/little
 ## API updated (v.0.0.2)
 Features added:
 
-+ API method for login changed. Now, you can upload images (one per user). Please, check [login API method](#login)
-+ Authorization availabe. So, you can check, if you're logged in the system. Check [authorization API method](#auth)
-Note: it doesn't work for localhost.
-+ Uploading images: you can upload image during [login](#users-login) or after login process in order to add or change image, using [upload](#users-upload) API method.
-+ [`userObject`](#userobject) and [`secureUserObject`](#secureUserObject) now have `imageUrl` field. It is relative path to uploaded image, if there is any, or `null`.  
++ *API method for login changed*. Now, you can upload images (one per user). Please, check [login API method](#post-userlogin)
++ *Authorization availabe*. So, you can check, if you're logged in the system. Check [authorization API method](#post-userauth)
+**Note**: it doesn't work for localhost.
++ *Uploading images*: you can upload image during [login](#post-userslogin) or after login process in order to add or change image, using [upload](#post-usersupload) API method.
++ [`userObject`](#userobject) and [`secureUserObject`](#secureuserobject) now have `imageUrl` field. It is relative path to uploaded image, if there is any, or `null`.  
 
 ## API overview
 API available on **`http://chaty.st.lviv.ua/api`**.
