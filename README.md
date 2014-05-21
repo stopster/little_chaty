@@ -94,10 +94,12 @@ Get particular user object, if userName provided or array of users, which is onl
 
 ### [POST] /users/login
 Login user. Could be done in two ways.
-#### First: contentType is set to `application/json` or `application/x-www-form-urlencoded` (default for forms)
+#### First
+contentType is set to `application/json` or `application/x-www-form-urlencoded` (default for forms)  
 **Input**: `basicUserObject`.  
 **Output**: `secureUserObject`.  
-#### Second: contentType is set to `multipart/form-data`
+#### Second
+contentType is set to `multipart/form-data`  
 **Input**: [HTML FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) with fields, that has proper names.  
 Names accepted:
 `name`* - stands for user name, required,  
