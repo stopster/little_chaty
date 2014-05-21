@@ -90,9 +90,13 @@ exports.Chat = function(http){
 		}
 	}
 	User.on("logout", function(user){
-		var socket = namedSockets[user.name];
-		if(socket){
-			socket.disconnect();
+		for(var i in namedSockets){
+			if(namedSockets[i] === user.name){
+				var socket = io.sockets.sockets[i];
+				if(socket){
+					socket.disconnect();
+				}
+			}
 		}
 	});
 
