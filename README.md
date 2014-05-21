@@ -13,7 +13,7 @@ Features added:
 + *Authorization availabe*. So, you can check, if you're logged in the system. Check [authorization API method](#post-usersauthorize)
 **Note**: it doesn't work for localhost.
 + *Uploading images*: you can upload image during [login](#post-userslogin) or after login process in order to add or change image, using [upload](#post-usersupload) API method.  
-***Uploaded images*** available on the same domain **`http://chaty.st.lviv.ua`**.
+***Uploaded images*** available on the same domain **`http://chaty.st.lviv.ua`**. E.g. `http://chaty.st.lviv.ua/uploads/image-14000231231d.png`
 + [`userObject`](#userobject) and [`secureUserObject`](#secureuserobject) now have `imageUrl` field. It is relative path to uploaded image, if there is any, or `null`.  
 
 ## API overview
