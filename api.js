@@ -1,9 +1,9 @@
 var User = require("./user.js").User;
 var jstrfy = JSON.stringify;
 var crypto = require("crypto");
-var Cookies = require("cookies");
 var fs = require("fs");
 var formidable = require("formidable");
+var Cookies = require("cookies");
 
 exports.Api = function(app){
 	app.all('*', function(req, res, next) {
@@ -33,7 +33,8 @@ exports.Api = function(app){
 
 	app.post(pre + "/users/authorize", function(req, res){
 		var cookies = new Cookies(req, res);
-		var user = User.getById(cookies.get("id"));
+		var userId = cookies.get("chatId");
+		var user = User.getById(userId);
 		if(user){
 			res.send(jstrfy(user));
 		} else {
@@ -46,26 +47,23 @@ exports.Api = function(app){
 	// Username need to be provided
 	app.post(pre + "/users/login", function(req, res){
 		var contType = req.get("Content-Type");
-		if(/^application\/json/i.test(contType)){
-			handleUserDataJson(req, res);
-		} else if(/^(multipart\/form\-data)/i.test(contType)){
+		if(/^(multipart\/form\-data)/i.test(contType)){
 			handleUserDataForm(req, res);
 		} else {
-			res.statusCode = 400;
-			res.send(jstrfy({message: "Please, send proper Content-Type header (application/json and multipart/form-data allowed)."}))
+			handleUserDataJson(req, res);
 		}
 	});
 
 	app.post(pre + "/users/logout", function(req, res){
 		var success;
 		var cookies = new Cookies(req, res);
-		var userId = cookies.get("id");
+		var userId = cookies.get("chatId");
 
 		userId = userId? userId: req.body.id;
 		success = User.logout({id: userId});
 
 		if(success){
-			cookies.set("id", "");
+			cookies.set("chatId", "");
 			res.send({success: true});
 		} else {
 			res.statusCode = 404;
@@ -75,7 +73,7 @@ exports.Api = function(app){
 
 	var uploadsDir = app.get("userUploads");
 	app.post(pre + "/users/upload", function(req, res){
-		var user = User.getById(new Cookies(req, res).get("id"));
+		var user = User.getById(new Cookies(req, res).get("chatId"));
 		var fileType = req.get("Content-Type");
 		var fileSize = req.get("Content-Length");
 		var allowedTypes = ["image/png", "image/jpeg", "image/gif"];
@@ -95,7 +93,7 @@ exports.Api = function(app){
 			onError("Please, login first", 403);
 			return;
 		}
-
+		console.log(fileType);
 		if(allowedTypes.indexOf(fileType) === -1){
 			onError("Not supported type. Please, send image as binary with proper Content-Type header. Following allowed: " + allowedTypes.join(", "), 400);
 			return;
@@ -155,7 +153,7 @@ exports.Api = function(app){
 			if(loginResult.success){
 				user = loginResult.user;
 				var cookies = new Cookies(req, res);
-				cookies.set("id", user.id);
+				cookies.set("chatId", user.id);
 				res.send(jstrfy(user));
 			} else {
 				res.statusCode = loginResult.code;
@@ -177,7 +175,7 @@ exports.Api = function(app){
 				user = loginResult.user;
 				var onSuccess = function(){
 					var cookies = new Cookies(req, res);
-					cookies.set("id", user.id);
+					cookies.set("chatId", user.id);
 					res.send(jstrfy(user));
 				}
 
@@ -218,7 +216,3 @@ exports.Api = function(app){
 		});
 	}
 };
-
-
-
-
