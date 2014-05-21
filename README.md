@@ -93,13 +93,14 @@ Get particular user object, if userName provided or array of users, which is onl
 **Output**: `userObject/[userObject]`.  
 
 ### [POST] /users/login
-Login user. Could be done in two ways.
-***First:*** contentType is set to `application/json` or `application/x-www-form-urlencoded` (default for forms)  
+Login user. Could be done in two ways.  
+######First: contentType is set to `application/json` or `application/x-www-form-urlencoded` (default for forms)  
 **Input**: `basicUserObject`.  
 **Output**: `secureUserObject`.  
 
-***Second:*** contentType is set to `multipart/form-data`  
+######Second: contentType is set to `multipart/form-data`  
 **Input**: [HTML FormData](https://developer.mozilla.org/en-US/docs/Web/API/FormData) with fields, that has proper names.  
+
 *Names accepted*:
 `name`* - stands for user name, required,  
 `sex` - stands for user sex (male/female),  
@@ -113,6 +114,7 @@ Login user. Could be done in two ways.
       <input name="sex" type="radio" value="male"/>
       <input name="sex" type="radio" value="female"/>
       <input name="image" type="file"/>
+      <input name="login" type="submit" value="Log in"/>
     </form>
 
     $(".login-form").submit(function(event){
@@ -129,12 +131,12 @@ Login user. Could be done in two ways.
 
 ### [POST] /users/logout
 Logout user.  
-**Input**: `userIDObject` or `secureUserObject`.   
+**Input**: `userIDObject` or `secureUserObject`.  
 **Output**: `successObject`.  
 
 ### [POST] /users/authorize
-Try to get already loggedin user. Uses cookies, so does NOT work for LOCALHOST.
-**Input**: 
+Try to get already loggedin user. Uses cookies, so does NOT work for LOCALHOST.  
+**Input**:  
 **Output**: `secureUserObject` 
 
 ## Chat 
