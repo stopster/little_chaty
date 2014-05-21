@@ -17,7 +17,9 @@ Features added:
 
 ## API overview
 API available on **`http://chaty.st.lviv.ua/api`**.
-For chat functionality with websockets, use **`http://chaty.st.lviv.ua`** address (or **`http://chaty.st.lviv.ua:5000`** when websocket falls to xhr-pooling).
+For chat functionality with websockets, use **`http://chaty.st.lviv.ua`** address (or **`http://chaty.st.lviv.ua:5000`** when websocket falls to xhr-pooling).  
+
+***Uploaded images*** available on the same domain **`http://chaty.st.lviv.ua`**.
 
 General flow of using API:
 
