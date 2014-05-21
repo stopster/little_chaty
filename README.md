@@ -12,14 +12,13 @@ Features added:
 + *API method for login changed*. Now, you can upload images (one per user). Please, check [login API method](#post-userslogin)
 + *Authorization availabe*. So, you can check, if you're logged in the system. Check [authorization API method](#post-usersauthorize)
 **Note**: it doesn't work for localhost.
-+ *Uploading images*: you can upload image during [login](#post-userslogin) or after login process in order to add or change image, using [upload](#post-usersupload) API method.
++ *Uploading images*: you can upload image during [login](#post-userslogin) or after login process in order to add or change image, using [upload](#post-usersupload) API method.  
+***Uploaded images*** available on the same domain **`http://chaty.st.lviv.ua`**.
 + [`userObject`](#userobject) and [`secureUserObject`](#secureuserobject) now have `imageUrl` field. It is relative path to uploaded image, if there is any, or `null`.  
 
 ## API overview
 API available on **`http://chaty.st.lviv.ua/api`**.
 For chat functionality with websockets, use **`http://chaty.st.lviv.ua`** address (or **`http://chaty.st.lviv.ua:5000`** when websocket falls to xhr-pooling).  
-
-***Uploaded images*** available on the same domain **`http://chaty.st.lviv.ua`**.
 
 General flow of using API:
 
