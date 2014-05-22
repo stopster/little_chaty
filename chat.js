@@ -10,22 +10,12 @@ exports.Chat = function(http){
 	//Allows using native WebSockets or other libs, that follows the socket.io protocol
 	io.set("destroy upgrade", false);
 
-
-	io.set("authorization", function(hData, callback){
-		var user = tryToAuthUser(hData.headers);
-		if(user){
-			hData.user = user;
-		}
-		callback(null, true);
-	});
 	io.on("connection", function(socket){
 		socket.on("enterChat", function(user){
-			var currentUser = socket.manager.handshaken[socket.id].user;
-			currentUser = currentUser? currentUser: tryToAuthUser(null, user);
+			var currentUser = tryToAuthUser(null, user);
 
 			if(!currentUser){
 				socket.emit("error", {message: "Please, login first"});
-				namedSockets[socket.id] = user.name;
 				return;
 			}
 			socket.broadcast.emit("userOnline", User.safe(currentUser));
@@ -38,8 +28,7 @@ exports.Chat = function(http){
 				socket.emit("error", {message: "Empty message is not allowed!"});
 				return;
 			}
-			var currentUser = socket.manager.handshaken[socket.id].user;
-			currentUser = currentUser? currentUser: tryToAuthUser(null, User.get(namedSockets[socket.id]), socket);
+			var currentUser = tryToAuthUser(null, User.get(namedSockets[socket.id]), socket);
 
 			if(!currentUser){
 				socket.emit("error", {message: "Please, login first"});
@@ -56,8 +45,7 @@ exports.Chat = function(http){
 		});
 
 		socket.on("disconnect", function(){
-			var currentUser = socket.manager.handshaken[socket.id].user;
-			currentUser = currentUser || socket.store.data.user;
+			var currentUser = socket.store.data.user || tryToAuthUser(null, User.get(namedSockets[socket.id]), socket);
 			if(currentUser){
 				socket.broadcast.emit("userOffline", User.safe(currentUser));
 				delete namedSockets[socket.id];
