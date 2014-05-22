@@ -2,32 +2,43 @@ doctype html
 html
 	head
 		title Chat app
+		link(rel="stylesheet", type="text/css", href="/css/bootstrap.min.css")
+		link(rel="stylesheet", type="text/css", href="/css/bootstrap-theme.min.css")
 		link(rel="stylesheet", type="text/css", href="/css/style.css")
 	body
-		div.login-form
-			form.test-multipart(method="POST", action="/api/users/login", enctype="multipart/form-data")
-				span name
-				br/
-				input.username(type="text", name="name")
-				br/
-				input.sex(type="radio", name="sex", value="male")
-				span male
-				input.sex(type="radio", name="sex", value="female")
-				span female
-				br/
-				div.dropImage
-					| Drop your image here!
-				br/
-				input.image(type="file", name="image")
-				input.login(type="submit", value="login")
-			button.logout logout
-		div.container
-			h2 Chat app
-			div.messages
-			textarea.message-text
-			input.send(type="button", value="send")
-
+		.container
+			h1 Plain chat
+			.col-xs-12
+				.login-form.col-xs-4.col-xs-offset-4
+					.avatar-wrapper
+						.drop-avatar(title="Drop image here!")
+							img(src="/images/basic-avatar.png", width=64, height=64)
+					input.form-control.input.username(type=text, placeholder="your name")
+					.row
+						.sex-buttons.button-group.col-xs-6
+							button.btn.btn-default.btn-sm.male(type=button) male
+							button.btn.btn-default.btn-sm.female(type=button) female
+						.col-xs-6
+							button.btn.btn-primary.start-chat(type=button) start chatting!
+			.chat-wrapper.row
+					.users-list.col-xs-4
+						.user
+							img(src="/images/basic-avatar.png", width=50, height=50)
+							| user
+					.chat-window.col-xs-8
+						.chat.col-xs-12
+							.message
+								span.time [22/12/12 10:54] 
+								span.user user 
+								span.message Hello! this is my message
+						.type-message-wrapper.col-xs-12
+							.col-xs-10
+								textarea.form-control.my-message(rows=3)
+							.col-xs-2
+								button.btn.btn-default.send(type=button) send
+								button.btn.btn-danger.logout(type=button)
+									span.glyphicon.glyphicon-off
 
 		script(type="text/javascript", src="/js/zepto.min.js")
 		script(type="text/javascript", src="/js/socket.io.min.js")
-		script(type="text/javascript", src="/#{secretPublic}/script.js")
+		script(type="text/javascript", src="/js/script.js")
