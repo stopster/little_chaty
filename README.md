@@ -230,7 +230,7 @@ Just to be make sure, that difference between client event and server one is cry
 1. Install [node.js](http://nodejs.org).
 2. Clone project (git clone https://github.com/stopster/little_chaty.git) or just grab a .zip (right sidebar)
 3. Go to your project root directory and run `npm install` from command line. It will install all required modules.
-4. Run `node index.js` from command line. Project will start on localhost:5000 link.
+4. Run `node index.js` from command line. Project will start on localhost:5000.
 
 ## Good luck!
 If something went wrong (server is down, bugs (I'm sure, they are there), or this doc sucks) email me!    
