@@ -4,22 +4,19 @@ Chat app
 Simple back end app for chat.
 Provides API to login/logout and chating.
 
-CLIENT LIB NEEDED: [socket.io](https://raw.githubusercontent.com/stopster/little_chaty/master/public/js/socket.io.min.js)  
-
-## API updated (v.0.0.2)
-Features added:
-
-+ *API method for login changed*. Now, you can upload images (one per user). Please, check [login API method](#post-userslogin)
-+ *Authorization availabe*. So, you can check, if you're logged in the system. Check [authorization API method](#post-usersauthorize)
-**Note**: it doesn't work for localhost,so try to setup some unreal domain (e.g. www.myawesomedomainforchat.com and redirect it to localhost using file `hosts`).
-+ *Uploading images*: you can upload image during [login](#post-userslogin) or after login process in order to add or change image, using [upload](#post-usersupload) API method.  
-***Uploaded images*** available on the same domain **`http://chaty.st.lviv.ua`**.  
-E.g. `http://chaty.st.lviv.ua/uploads/image-14000231231d.png`
-+ [`userObject`](#userobject) and [`secureUserObject`](#secureuserobject) now have `imageUrl` field. It is relative path to uploaded image, if there is any, or `null`.  
+## Summary
++ [API overview](#api-overview)
++ [API objects](#api-objects)
++ [API methods](#api-methods)
++ [Chat API methods](#chat-methods)
++ [Installation](#instalation)  
 
 ## API overview
-API available on **`http://chaty.st.lviv.ua/api`**.
-For chat functionality with websockets, use **`http://chaty.st.lviv.ua`** address (or **`http://chaty.st.lviv.ua:5000`** when websocket falls to xhr-pooling).  
+It consists of two parts:
++ REST-like API for users functionality (login, logout, authorize, get user(s))
++ Web sockets API for chat functionality.  
+
+Consider this API as a set of objects and methods to work with this objects.
 
 General flow of using API:
 
@@ -184,7 +181,7 @@ Method accepts binary image up to 2Mb with proper contentType header set (one of
 **Input**: binary file content in [Blob](https://developer.mozilla.org/en-US/docs/Web/API/Blob)
 **Output**: `imageObject`  
 
-## Chat 
+## Chat methods
 Chat functionality implemented with [socket.io](http://socket.io/).
 So, it's recommended to use it on client side, unless you are using native WebSocket API or another lib. In this case, you have to mimic socket.io [protocol](https://github.com/LearnBoost/socket.io-spec).
 ### [client event] enterChat
@@ -229,5 +226,12 @@ Just to be make sure, that difference between client event and server one is cry
 *Send data to the server by emiting (`.emit()`) client events (enterChat, postMessage, ...).*  
 *Receive data from the server by listening (`.on()`) server events (userOnline, message...)*  
 
+# Installation
+1. Install [node.js](http://nodejs.org).
+2. Clone project (git clone https://github.com/stopster/little_chaty.git) or just grab a .zip (right sidebar)
+3. Go to your project root directory and run `npm install` from command line. It will install all required modules.
+4. Run `node index.js` from command line. Project will start on localhost:5000 link.
+
 ## Good luck!
 If something went wrong (server is down, bugs (I'm sure, they are there), or this doc sucks) email me!    
+Feel free to send pull requests with new features and bugfixes.
