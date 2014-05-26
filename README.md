@@ -9,7 +9,7 @@ Provides API to login/logout and chating.
 + [API objects](#api-objects)
 + [API methods](#api-methods)
 + [Chat API methods](#chat-methods)
-+ [Installation](#instalation)  
++ [Installation](#installation)  
 
 ## API overview
 It consists of two parts:
