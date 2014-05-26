@@ -1,8 +1,7 @@
 Chat app
 ==============
 
-Simple back end app for chat.
-Provides API to login/logout and chating.
+Simple back end app for chat. Provides REST-like API and chat functionality via WebSockets.
 
 ## Summary
 + [API overview](#api-overview)
