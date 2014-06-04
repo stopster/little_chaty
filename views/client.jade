@@ -39,6 +39,4 @@ html
 								button.btn.btn-danger.logout(type=button)
 									span.glyphicon.glyphicon-off
 
-		script(type="text/javascript", src="/js/zepto.min.js")
-		script(type="text/javascript", src="/js/socket.io.min.js")
-		script(type="text/javascript", src="/js/script.js")
+		script(src="/vendor/requirejs/require.js", data-main="/main.js")

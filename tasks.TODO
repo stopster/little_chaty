@@ -1,11 +1,12 @@
-Little chaty:
-  User interaction:
-    ✔ Add cookies support @started(14-05-18 12:28) @done (14-05-19 13:08) @lasted(1 day, 0:40:00)
-    ✘ Logout user, when innactive for a couple of minutes @started(14-05-17 14:29) @cancelled (14-05-20 10:37) @wasted(2 days, 20:08:00)
-    ✔ Handle file upload as a binary @done (14-05-17 23:05)
-    ✔ Save file with some id (timestamp) @done (14-05-19 18:15)
-    ✔ Remove file on user logs out @done (14-05-19 18:34)
-    ✔ Clear all files on server started @started(14-05-19 19:15) @done (14-05-20 10:36) @lasted(15:21:00)
-  Chat:
-    ✔ Add time to message @started(14-05-19 15:48) @done (14-05-19 16:11) @lasted(0:23:00)
-    ✔ Validaate empty message @done (14-05-19 15:50)
+Server:
+    ☐ Do something :))
+
+Client:
+    ☐ Include require.js @started(14-05-31 12:01)
+    ☐ Include React.js
+    ☐ Include backbone.js
+    ☐ Code main page class
+    ☐ Code login form class
+    ☐ Code chat window class
+    ☐ Code users list class
+    ☐ Code message box class

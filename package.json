@@ -1,16 +1,20 @@
 {
-	"name": "little_chatty",
-	"description": "Back-end app for FE academy.",
-	"author": "st",
-	"version": "0.0.1",
-	"repository": "https://github.com/stopster/little_chaty",
-	"dependencies": {
-		"express": "latest",
-		"socket.io": "latest",
-		"jade": "latest",
-		"body-parser": "latest",
-		"cookies": "latest",
-		"rimraf": "latest",
-		"formidable": "latest"
-	}
+  "name": "little_chatty",
+  "description": "Back-end app for FE academy.",
+  "author": "st",
+  "version": "0.0.1",
+  "repository": "https://github.com/stopster/little_chaty",
+  "dependencies": {
+    "express": "latest",
+    "socket.io": "latest",
+    "jade": "latest",
+    "body-parser": "latest",
+    "cookies": "latest",
+    "rimraf": "latest",
+    "formidable": "latest"
+  },
+  "devDependencies": {
+    "gulp": "~3.7.0",
+    "bower": "~1.3.3"
+  }
 }
