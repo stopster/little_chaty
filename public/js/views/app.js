@@ -1,12 +1,11 @@
-define(["jquery", "backbone", "underscore", "mustache"], function($, Backbone, _, Mustache){
+/** @jsx React.DOM */
+define(["jquery", "backbone", "underscore", "jsx", "react"], function($, Backbone, _, jsx, React){
 	var App = Backbone.View.extend({
 		initialize: function(options){
-			this.template = options.template;
-			this.render();
+			this.render();	
 		},
 		render: function(){
-			this.$el.html(Mustache.render(this.template));
-			return this;
+			this.$el.html(appTpl);
 		}
 	});
 

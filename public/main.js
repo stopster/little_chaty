@@ -1,11 +1,11 @@
 require.config({
 	baseUrl: "/",
 	paths: {
-		text: "vendor/requirejs-text/text",
 		jquery: "vendor/zepto/zepto.min",
 		backbone: "vendor/backbone/backbone",
 		underscore: "vendor/underscore/underscore",
-		mustache: "vendor/mustache/mustache",
+		jsx: "vendor/react/JSXTransformer.js",
+		react: "vendor/react/react.min",
 		models: "js/models",
 		views: "js/views",
 		collections: "js/collections",
@@ -18,6 +18,6 @@ require.config({
 	}
 });
 
-require(["views/app", "text!tpls/app.html"], function(AppView, appTpl){
-	new AppView({template: appTpl, el: $(".container")});
+require(["views/app"], function(AppView, appTpl){
+	new AppView({el: $(".container")});
 });

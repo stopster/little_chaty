@@ -17,6 +17,7 @@
   ],
   "dependencies": {
     "requirejs": "~2.1.13",
-    "zepto": null
+    "zepto": null,
+    "react": null
   }
 }
