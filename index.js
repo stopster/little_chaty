@@ -4,7 +4,7 @@ var app = new express();
 var http = require("http").createServer(app);
 var fs = require("fs");
 
-var apiPort = 5000;
+var apiPort = 8080;
 var secretPublic = process.env.FE_ACADEMY_CHAT_CLIENT_DIR;
 
 app.set("userUploads", "/uploads");

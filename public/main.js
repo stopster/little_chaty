@@ -4,7 +4,6 @@ require.config({
 		jquery: "vendor/zepto/zepto.min",
 		backbone: "vendor/backbone/backbone",
 		underscore: "vendor/underscore/underscore",
-		jsx: "vendor/react/JSXTransformer.js",
 		react: "vendor/react/react.min",
 		models: "js/models",
 		views: "js/views",
