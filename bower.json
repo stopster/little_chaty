@@ -16,9 +16,10 @@
     "tests"
   ],
   "dependencies": {
-    "requirejs": "~2.1.13",
+    "requirejs": null,
+    "requirejs-text": null,
+    "jsx-requirejs-plugin": null,
     "zepto": null,
-    "react": null,
     "backbone": null
   }
 }

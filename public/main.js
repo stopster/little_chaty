@@ -4,19 +4,21 @@ require.config({
 		jquery: "vendor/zepto/zepto.min",
 		backbone: "vendor/backbone/backbone",
 		underscore: "vendor/underscore/underscore",
-		react: "vendor/react/react.min",
-		models: "js/models",
-		views: "js/views",
-		collections: "js/collections",
-		tpls: "templates"
+		text: "vendor/requirejs-text/text",
+		react: "vendor/react/react",
+		JSXTransformer: "vendor/jsx-requirejs-plugin/js/JSXTransformer-0.10.0",
+		jsx: "vendor/jsx-requirejs-plugin/js/jsx"
 	},
 	shim: {
 		jquery: {
 			exports: "$"
 		}
+	},
+	jsx: {
+		fileExtension: ".jsx"
 	}
 });
 
-require(["views/app"], function(AppView, appTpl){
-	new AppView({el: $(".container")});
+require(["jquery", "js/views/appView", "js/models/app"], function($, AppView, AppModel){
+	var app = new AppView({ el: $("#chat-app"), model: new AppModel() });
 });

@@ -7,39 +7,7 @@
         <link rel="stylesheet" type="text/css" href="/css/style.css"/>        
     </head>
     <body>
-        <div class="container">
-            <h1>Plain chat</h1>            
-            <div class="col-xs-12">
-                <div class="login-form col-xs-4 col-xs-offset-4">
-                    <div class="avatar-wrapper">
-                        <div class="drop-avatar">
-                            <img src="/images/basic-avatar.png"/>
-                        </div>
-                    </div>
-                    <input class="form-control" type="text" placeholder="your name"/>
-                    <div class="row">
-                        <div class="sex-buttons button-group col-xs-6">
-                            <button class="btn btn-default btn-sm male" type="button">male</button>
-                            <button class="btn btn-default btn-sm female" type="button">female</button>
-                        </div>                        
-                        <div class="col-xs-6">
-                            <button class="btn btn-primary start-chat" type="button">Chat!</button>
-                        </div>
-                    </div>    
-                </div>
-            </div>
-            <div class="chat-wrapper row">
-                <div class="users-list col-xs-4">
-                    <div class="user">
-                        <img src="/images/basic-avatar.png"/>User
-                    </div>
-                </div>          
-                <div class="chat-window col-xs-8">
-                    
-                </div>
-            </div>
-        </div>
-        <script type="text/jsx" src="/vendor/react/JSXTransformer.js"></script>
-        <script type="text/javascript" src="/vendor/requirejs/require.js" data-main"/main.js"></script>
+        <div id="chat-app"></div>
+        <script type="text/javascript" src="/vendor/requirejs/require.js" data-main="/main.js"></script>
     </body>
 </html>

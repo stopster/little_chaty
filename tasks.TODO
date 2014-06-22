@@ -5,8 +5,12 @@ Client:
     ✔ Include require.js @started(14-05-31 12:01) @done (14-06-04 17:06) @lasted(4 days, 5:05:00)
     ✔ Include React.js @started(14-06-04 17:10)
     ✔ Include backbone.js @done (14-06-04 17:06)
-    ☐ Code main page class
-    ☐ Code login form class
-    ☐ Code chat window class
-    ☐ Code users list class
-    ☐ Code message box class
+    ✔ Code main page class @started @done (14-06-22 23:15)
+    ✔ Code login form class @done (14-06-22 23:15)
+    ✔ Code chat window class @done (14-06-22 23:15)
+    ✔ Code users list class @done (14-06-22 23:15)
+    ✔ Code message box class @done (14-06-22 23:15)
+    Today @started(14-06-08 10:29):
+      ✔ Make basic markup for chat @started @done (14-06-22 23:15)
+      ✔ Make app class and render it @done (14-06-22 23:16)
+      ✔ Make login class and render it @done (14-06-22 23:16)
