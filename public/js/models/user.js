@@ -1,6 +1,8 @@
 define(["backbone", "underscore"], function(Backbone, _){
 	var User = Backbone.Model.extend({
-		url: "/api/users"
+		defaults: {
+			imageUrl: "/images/basic-avatar.png"
+		}
 	});
 
 	return User;
