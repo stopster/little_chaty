@@ -1,6 +1,7 @@
 require.config({
 	baseUrl: "/",
 	paths: {
+		conf: "config",
 		jquery: "vendor/zepto/zepto.min",
 		backbone: "vendor/backbone/backbone",
 		underscore: "vendor/underscore/underscore",
