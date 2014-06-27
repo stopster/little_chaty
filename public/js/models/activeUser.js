@@ -26,7 +26,15 @@ define(["conf", "backbone", "underscore", "jquery", "js/models/user"], function(
 				error: onError
 			});
 		},
-		logout: function(){}
+		logout: function(onSuccess, onError){
+			var logoutUrl = conf.apiUrl + "/logout";
+			$.ajax({
+				type: "POST",
+				url: logoutUrl,
+				success: onSuccess,
+				error: onError
+			});
+		}
 	});
 
 	return ActiveUser;

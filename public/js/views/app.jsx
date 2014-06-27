@@ -14,11 +14,14 @@ define([
     ){
     var AppView = React.createClass({
         render: function(){
+            var model = this.props.model,
+                activeUser = model.get("activeUser"),
+                users = model.get("users");
             return (
                 <div className="container">
                     <h1>Plain chat</h1>            
                     <div className="col-xs-12">
-                        <LoginForm className="col-xs-5 col-xs-offset-3"/>
+                        <LoginForm model = {activeUser} className="col-xs-5 col-xs-offset-3"/>
                     </div>
                     <div className="chat-wrapper row">
                         <UserList className="col-xs-4 col-md-2"/>

@@ -10,6 +10,12 @@ define([
 		initialize: function(options){
 			this.render();
 		},
-
+		render: function(){
+			if(this.model.get("authenticated")){
+				console.log("render active user");
+			} else {
+				console.log("render login form");
+			}
+		}
 	});
 });

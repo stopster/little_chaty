@@ -4,7 +4,7 @@ define(["jquery", "react", "backbone", "underscore", "jsx!js/views/app"], functi
 			this.render();
 		},
 		render: function(){
-			React.renderComponent(AppView(), this.el);
+			React.renderComponent(AppView({ model: this.model }), this.el);
 			return this;
 		}
 	});
