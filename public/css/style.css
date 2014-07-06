@@ -1,7 +1,69 @@
+.loader-wrap{
+	width: 300px;
+	height: 300px;
+	margin: 0 auto;
+	position: relative;
+}
+.loader,
+.loader:after,
+.loader:before{
+	width: 1em;
+	height: 4em;
+	font-size: 16px;
+	background: #46a;
+	-webkit-animation: loader 1s ease-in-out 0.16s infinite;
+	animation: loader 1s ease-in-out 0.16s infinite;
+}
+.loader:after,
+.loader:before{
+	content: "";
+	position: absolute;
+	left: -1.4em;
+	-webkit-animation-delay: 0;
+}
+.loader:before{
+	left: 1.4em;
+	-webkit-animation-delay: 0.32s;
+}
+.loader{
+	position: relative;
+	margin: 5em auto;
+}
+@-webkit-keyframes loader{
+	0%,
+	25%,
+	75%,
+	100%{
+		box-shadow: 0 0 #46a;
+		height: 4em;
+	}
+	50%{
+		box-shadow: 0 -1em #46a;
+		height: 5em;
+	}
+}
 .login-form{
 	border: 1px solid #efefef;
 	padding: 10px;
 	border-radius: 4px;
+}
+.login-form input[type=text]{
+	padding-right: 30px;
+}
+.login-name-wrap{
+	position: relative;
+	margin-bottom: 10px;
+}
+.login-name-wrap .glyphicon{
+	position: absolute;
+	top: 8px;
+	right: 8px;
+}
+.login-name-wrap .glyphicon-ok{
+	color: #3c763d;
+}
+.login-name-wrap .glyphicon-warning-sign{
+	color: #f0ad4e;
 }
 .drop-avatar{
 	width: 64px;
